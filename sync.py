@@ -11,6 +11,8 @@ import httpx
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+SYNC_STATUS = {}
+
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data'
 SOURCES = {'afj': 259, 'vpg': 294, 'bronze': 301}
@@ -141,39 +143,118 @@ def parse_vpg_matches(html, state):
             matches.append(match)
     return matches
 
+
+def extract_embedded_data(html):
+    """Read JSON state embedded in HTML; never guess fixtures from plain text."""
+    soup = BeautifulSoup(html, 'html.parser')
+    payloads = []
+    for script in soup.select('script[type="application/json"], script#__NEXT_DATA__'):
+        raw = script.string or script.get_text()
+        if not raw or len(raw) > 5_000_000:
+            continue
+        try:
+            payloads.append(json.loads(raw))
+        except (ValueError, TypeError):
+            pass
+    return payloads
+
+def extract_structured_matches(html):
+    """Recognize fixtures only when home and away are explicit structured fields."""
+    found = []
+    seen = set()
+    def label(obj):
+        if isinstance(obj, str):
+            return norm(obj)
+        if isinstance(obj, dict):
+            for key in ('name','teamName','clubName','displayName','title'):
+                if isinstance(obj.get(key), str):
+                    return norm(obj[key])
+        return ''
+    def walk(obj, depth=0):
+        if depth > 18:
+            return
+        if isinstance(obj, list):
+            for item in obj[:1500]:
+                walk(item,depth+1)
+        elif isinstance(obj, dict):
+            home = next((obj[k] for k in ('homeTeam','home_team','home','local') if k in obj),None)
+            away = next((obj[k] for k in ('awayTeam','away_team','away','visitor','visitante') if k in obj),None)
+            h,a=label(home),label(away)
+            if h and a and h.casefold()!=a.casefold() and ('intocables' in h.casefold() or 'intocables' in a.casefold()):
+                score=obj.get('score')
+                hs=next((obj[k] for k in ('homeScore','home_score','homeGoals') if k in obj),None)
+                az=next((obj[k] for k in ('awayScore','away_score','awayGoals') if k in obj),None)
+                if isinstance(score,dict):
+                    hs=score.get('home',hs)
+                    az=score.get('away',az)
+                valid=lambda x: isinstance(x,int) and not isinstance(x,bool) and 0<=x<=99
+                completed=valid(hs) and valid(az)
+                date=next((str(obj[k]) for k in ('date','scheduledAt','startTime','kickoff','matchDate') if obj.get(k)), '')
+                roundval=next((str(obj[k]) for k in ('round','matchday','jornada','week') if obj.get(k) is not None),'')
+                item={'home':h,'away':a,'home_score':hs if completed else None,
+                    'away_score':az if completed else None,'date':date,'round':roundval,
+                    'status':'Finalizado' if completed else 'Programado'}
+                key=(h.casefold(),a.casefold(),date,roundval)
+                if key not in seen:
+                    seen.add(key)
+                    found.append(item)
+            for value in obj.values():
+                if isinstance(value,(dict,list)):
+                    walk(value,depth+1)
+    for payload in extract_embedded_data(html):
+        walk(payload)
+    return found
+
 async def sync_vpg(key):
     url = VPG_URLS[key]
+    diagnostics = {'source_url':url,'checked_at':datetime.now(timezone.utc).isoformat(),'state':'checking'}
+    SYNC_STATUS[key] = diagnostics
     try:
         async with httpx.AsyncClient(headers=HEADERS, timeout=25, follow_redirects=True) as client:
-            table_response = await client.get(url)
-            table_response.raise_for_status()
-            standings = parse_vpg_standings(table_response.text)
-            matches = []
-            for state in ('completed','scheduled'):
-                # Separate views on VPG, may be rendered dynamically by the provider.
-                for match_url in (url + '/matches?status=' + state,):
-                    response = await client.get(match_url)
+            responses = []
+            for endpoint in (url, url + '/matches', url + '/matches?status=completed', url + '/matches?status=scheduled'):
+                try:
+                    response = await client.get(endpoint)
+                    diagnostics[endpoint] = response.status_code
                     if response.is_success:
-                        matches.extend(parse_vpg_matches(response.text,state))
+                        responses.append(response.text)
+                except httpx.HTTPError as exc:
+                    diagnostics[endpoint] = type(exc).__name__
+        standings = []
+        matches = []
+        seen = set()
+        for html in responses:
+            if not standings:
+                standings = parse_vpg_standings(html)
+            candidates = extract_structured_matches(html)
+            candidates.extend(parse_vpg_matches(html,'scheduled'))
+            for m in candidates:
+                identity = (m['home'].casefold(),m['away'].casefold(),m.get('date',''),m.get('round',''))
+                if identity not in seen:
+                    seen.add(identity)
+                    matches.append(m)
         if not standings and not matches:
-            return {'ok':False,'reason':'VPG no expone datos de tabla o tarjetas de partido en HTML verificable.'}
+            diagnostics.update(state='unavailable',reason='No se han detectado clasificaciones o partidos verificables en el HTML o JSON público de VPG.')
+            return {'ok':False,'reason':diagnostics['reason']}
+        DATA.mkdir(exist_ok=True)
         path = DATA / f'{key}.json'
-        existing = {}
-        if path.is_file():
+        previous = {}
+        if path.exists():
             try:
-                existing = json.loads(path.read_text(encoding='utf-8'))
-            except (ValueError,OSError):
+                previous=json.loads(path.read_text(encoding='utf-8'))
+            except (OSError,ValueError):
                 pass
         if not standings:
-            standings = existing.get('standings',[])
+            standings=previous.get('standings',[])
         if not matches:
-            matches = existing.get('matches',[])
-        payload = {'source_url':url,'verified_at':datetime.now(timezone.utc).isoformat(),
+            matches=previous.get('matches',[])
+        payload={'source_url':url,'verified_at':datetime.now(timezone.utc).isoformat(),
             'matches':matches,'standings':standings}
-        DATA.mkdir(exist_ok=True)
-        temp = DATA / f'{key}.tmp'
-        temp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
-        temp.replace(path)
+        tmp=DATA / f'{key}.tmp'
+        tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+        tmp.replace(path)
+        diagnostics.update(state='ok',matches=len(matches),standings=len(standings))
         return {'ok':True,'matches':len(matches),'standings':len(standings)}
-    except (httpx.HTTPError,OSError) as exc:
-        return {'ok':False,'reason':f'{type(exc).__name__}: {str(exc)[:160]}'}
+    except (httpx.HTTPError,OSError,ValueError) as exc:
+        diagnostics.update(state='error',reason=f'{type(exc).__name__}: {str(exc)[:160]}')
+        return {'ok':False,'reason':diagnostics['reason']}
