@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data'
 COMPETITIONS = [
     ('afj', 'AFJ · 4ª División', '259'),
-    ('vpg', 'VPG · 5ª División', '294'),
+    ('vpg', 'VPG · 5ª División C', '294'),
     ('bronze', 'VPG · Bronze Zero', '301'),
 ]
 
