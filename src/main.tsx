@@ -88,35 +88,46 @@ async function exportLineup(formation:Formation,slots:(number|null)[],kit:Kit,sh
  const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;
  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('No se pudo generar la imagen');
  const W=1080,H=1350;
- const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#171b24');bg.addColorStop(.52,'#090b11');bg.addColorStop(1,'#340c1a');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
- ctx.fillStyle='#e52e4a';ctx.fillRect(0,0,W,12);
- ctx.textAlign='center';ctx.fillStyle='#f7f7fa';ctx.font='900 75px Arial';ctx.fillText('LOS INTOCABLES',540,117);
- ctx.fillStyle='#f44861';ctx.font='bold 27px Arial';ctx.fillText('FC 27  •  ALINEACIÓN OFICIAL',540,163);
- ctx.fillStyle='#b7b9c4';ctx.font='bold 24px Arial';ctx.fillText('FORMACIÓN  '+formation,540,218);
- const px=75,py=250,pw=930,ph=995;
- const grass=ctx.createLinearGradient(px,py,px+pw,py+ph);grass.addColorStop(0,'#123c37');grass.addColorStop(1,'#0a2627');ctx.fillStyle=grass;ctx.fillRect(px,py,pw,ph);
- for(let i=0;i<10;i++){ctx.fillStyle=i%2===0?'#ffffff08':'#0000000b';ctx.fillRect(px,py+i*ph/10,pw,ph/10)}
- ctx.strokeStyle='#e1f4e268';ctx.lineWidth=3;ctx.strokeRect(px+30,py+30,pw-60,ph-60);
- ctx.beginPath();ctx.moveTo(px+30,py+ph/2);ctx.lineTo(px+pw-30,py+ph/2);ctx.stroke();
- ctx.beginPath();ctx.arc(540,py+ph/2,125,0,Math.PI*2);ctx.stroke();
- ctx.strokeRect(px+pw*.24,py+30,pw*.52,140);ctx.strokeRect(px+pw*.24,py+ph-170,pw*.52,140);
+ const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#12141d');bg.addColorStop(.65,'#080b10');bg.addColorStop(1,'#26101b');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle=kit.primary;ctx.fillRect(0,0,W,10);
+ ctx.fillStyle='#ffffff08';ctx.beginPath();ctx.arc(920,30,300,0,Math.PI*2);ctx.fill();
+ ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='900 70px Arial';ctx.fillText('LOS INTOCABLES',65,103);
+ ctx.fillStyle=kit.primary;ctx.fillRect(65,123,52,5);
+ ctx.fillStyle='#d4d5de';ctx.font='bold 22px Arial';ctx.fillText('FC 27  /  ONCE TITULAR',65,166);
+ ctx.textAlign='right';ctx.fillStyle='#ffffff';ctx.font='900 45px Arial';ctx.fillText(formation,1015,162);
+ ctx.fillStyle='#a6a9b5';ctx.font='bold 16px Arial';ctx.fillText('SISTEMA TÁCTICO',1015,119);
+ const px=48,py=202,pw=984,ph=1022;
+ const grass=ctx.createLinearGradient(px,py,px+pw,py+ph);grass.addColorStop(0,'#173d36');grass.addColorStop(.55,'#0d302d');grass.addColorStop(1,'#092321');ctx.fillStyle=grass;ctx.fillRect(px,py,pw,ph);
+ for(let i=0;i<12;i++){ctx.fillStyle=i%2===0?'#ffffff08':'#00000009';ctx.fillRect(px,py+i*ph/12,pw,ph/12)}
+ const vignette=ctx.createRadialGradient(540,py+ph*.46,120,540,py+ph*.46,700);vignette.addColorStop(0,'#00000000');vignette.addColorStop(1,'#00000070');ctx.fillStyle=vignette;ctx.fillRect(px,py,pw,ph);
+ ctx.strokeStyle='#ffffff34';ctx.lineWidth=2.5;ctx.strokeRect(px+25,py+25,pw-50,ph-50);
+ ctx.beginPath();ctx.moveTo(px+25,py+ph/2);ctx.lineTo(px+pw-25,py+ph/2);ctx.stroke();
+ ctx.beginPath();ctx.arc(540,py+ph/2,110,0,Math.PI*2);ctx.stroke();
+ ctx.strokeRect(px+pw*.24,py+25,pw*.52,135);ctx.strokeRect(px+pw*.24,py+ph-160,pw*.52,135);
  const coords=positions(formation);
  coords.forEach((p,i)=>{
   const idx=slots[i];const player=idx===null?null:players[idx];
-  const x=px+p.x/100*pw,y=py+p.y/100*ph;
-  paintJersey(ctx,x,y,player?player[2]:'+',kit,1.25);
-  ctx.fillStyle='#0a0c12df';ctx.fillRect(x-72,y+45,144,34);
-  ctx.fillStyle='#fff';ctx.font='bold 18px Arial';ctx.fillText(player?player[0]:'SIN ASIGNAR',x,y+68);
-  ctx.fillStyle='#d4e5de';ctx.font='bold 15px Arial';ctx.fillText(p.label,x,y+100);
+  const x=px+(11+p.x*.78)/100*pw;
+  const y=py+(5+p.y*.88)/100*ph;
+  ctx.fillStyle='#00000048';ctx.beginPath();ctx.ellipse(x,y+28,52,14,0,0,Math.PI*2);ctx.fill();
+  paintJersey(ctx,x,y-13,player?player[2]:'+',kit,1.03);
+  const name=player?player[0]:'POR ASIGNAR';
+  ctx.font='900 19px Arial';const textWidth=Math.min(140,ctx.measureText(name).width+22);
+  const labelWidth=Math.max(91,textWidth);
+  ctx.fillStyle='#090d14ed';ctx.beginPath();ctx.roundRect(x-labelWidth/2,y+33,labelWidth,30,6);ctx.fill();
+  ctx.fillStyle='#ffffff';ctx.textAlign='center';ctx.fillText(name,x,y+54,130);
+  ctx.fillStyle='#e6f2ed';ctx.font='bold 14px Arial';ctx.fillText(p.label,x,y+81);
  });
- ctx.fillStyle='#0c0d13';ctx.fillRect(0,1250,W,100);
- ctx.fillStyle='#e83752';ctx.fillRect(75,1280,9,35);
- ctx.textAlign='left';ctx.fillStyle='#f3f3f7';ctx.font='bold 25px Arial';ctx.fillText('LOS INTOCABLES  •  FC 27',105,1307);
- ctx.textAlign='right';ctx.fillStyle='#aeb1bf';ctx.font='20px Arial';ctx.fillText('ONCE TITULAR',1000,1307);
+ ctx.fillStyle='#10131b';ctx.fillRect(0,1224,W,126);
+ ctx.fillStyle=kit.primary;ctx.fillRect(65,1262,7,46);
+ ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='900 27px Arial';ctx.fillText('LOS INTOCABLES FC',91,1281);
+ ctx.fillStyle='#9ca1af';ctx.font='bold 17px Arial';ctx.fillText('COMPETICIÓN · FC 27',91,1306);
+ ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='900 23px Arial';ctx.fillText('MATCHDAY XI',1015,1284);
+ ctx.fillStyle='#9ca1af';ctx.font='17px Arial';ctx.fillText('ORGULLO INTOCABLE',1015,1309);
  const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Error al exportar')),'image/png'));
- const file=new File([blob],'los-intocables-alineacion.png',{type:'image/png'});
+ const file=new File([blob],'los-intocables-once-oficial.png',{type:'image/png'});
  if(share&&navigator.share&&navigator.canShare?.({files:[file]})){
-  try{await navigator.share({files:[file],title:'Alineación Los Intocables FC 27'});return}catch(err){if((err as Error).name==='AbortError')return}
+  try{await navigator.share({files:[file],title:'Once titular · Los Intocables FC 27'});return}catch(err){if((err as Error).name==='AbortError')return}
  }
  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
