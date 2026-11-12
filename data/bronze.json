@@ -1,0 +1,187 @@
+{
+  "source_url": "https://virtualprogaming.com/league/superliga-zero-spain",
+  "verified_at": "2026-11-12",
+  "matches": [],
+  "standings": [
+    {
+      "position": 1,
+      "team": "TEAM SIGNAL",
+      "played": 8,
+      "won": 7,
+      "drawn": 1,
+      "lost": 0,
+      "gd": 28,
+      "points": 22
+    },
+    {
+      "position": 2,
+      "team": "928 FC",
+      "played": 8,
+      "won": 6,
+      "drawn": 2,
+      "lost": 0,
+      "gd": 14,
+      "points": 20
+    },
+    {
+      "position": 3,
+      "team": "DUCKS STRIKERS",
+      "played": 8,
+      "won": 5,
+      "drawn": 2,
+      "lost": 1,
+      "gd": 5,
+      "points": 17
+    },
+    {
+      "position": 4,
+      "team": "REX TAURUS",
+      "played": 8,
+      "won": 5,
+      "drawn": 1,
+      "lost": 2,
+      "gd": 5,
+      "points": 16
+    },
+    {
+      "position": 5,
+      "team": "SIBLINGS FC",
+      "played": 8,
+      "won": 4,
+      "drawn": 2,
+      "lost": 2,
+      "gd": -1,
+      "points": 14
+    },
+    {
+      "position": 6,
+      "team": "FC CHAMPANPRO",
+      "played": 7,
+      "won": 3,
+      "drawn": 4,
+      "lost": 0,
+      "gd": 3,
+      "points": 13
+    },
+    {
+      "position": 7,
+      "team": "RED LOCK SP",
+      "played": 7,
+      "won": 3,
+      "drawn": 2,
+      "lost": 2,
+      "gd": 1,
+      "points": 11
+    },
+    {
+      "position": 8,
+      "team": "LOS INTOCABLES",
+      "played": 8,
+      "won": 3,
+      "drawn": 2,
+      "lost": 3,
+      "gd": -2,
+      "points": 11
+    },
+    {
+      "position": 9,
+      "team": "NOVUS LEGACY",
+      "played": 8,
+      "won": 3,
+      "drawn": 2,
+      "lost": 3,
+      "gd": -3,
+      "points": 11
+    },
+    {
+      "position": 10,
+      "team": "SCHALKE TEMETO",
+      "played": 8,
+      "won": 3,
+      "drawn": 1,
+      "lost": 4,
+      "gd": -1,
+      "points": 10
+    },
+    {
+      "position": 11,
+      "team": "ZEUS ELEVEN",
+      "played": 6,
+      "won": 3,
+      "drawn": 0,
+      "lost": 3,
+      "gd": 2,
+      "points": 9
+    },
+    {
+      "position": 12,
+      "team": "ATLETICO TEMPESTAD",
+      "played": 4,
+      "won": 1,
+      "drawn": 2,
+      "lost": 1,
+      "gd": 0,
+      "points": 5
+    },
+    {
+      "position": 13,
+      "team": "XI ESPORTS",
+      "played": 8,
+      "won": 1,
+      "drawn": 2,
+      "lost": 5,
+      "gd": -6,
+      "points": 5
+    },
+    {
+      "position": 14,
+      "team": "GENESIS ESPORTS",
+      "played": 4,
+      "won": 1,
+      "drawn": 1,
+      "lost": 2,
+      "gd": -8,
+      "points": 4
+    },
+    {
+      "position": 15,
+      "team": "CD REAL TOLEDO",
+      "played": 6,
+      "won": 1,
+      "drawn": 0,
+      "lost": 5,
+      "gd": -8,
+      "points": 3
+    },
+    {
+      "position": 16,
+      "team": "AUREON ESPORTS",
+      "played": 5,
+      "won": 0,
+      "drawn": 0,
+      "lost": 5,
+      "gd": -5,
+      "points": 0
+    },
+    {
+      "position": 17,
+      "team": "Bye sp 4",
+      "played": 6,
+      "won": 0,
+      "drawn": 0,
+      "lost": 6,
+      "gd": -6,
+      "points": 0
+    },
+    {
+      "position": 18,
+      "team": "BRONCE FC",
+      "played": 5,
+      "won": 0,
+      "drawn": 0,
+      "lost": 5,
+      "gd": -18,
+      "points": 0
+    }
+  ]
+}
