@@ -19,6 +19,8 @@ function Standings({competition}:{competition:Competition}){
 }
 const titles:Record<Page,string>={inicio:'Inicio',competiciones:'Competiciones',partidos:'Partidos',plantilla:'Plantilla',clasificaciones:'Clasificaciones',alineacion:'Alineación'};
 const style=`
+.lineup-controls .lineup-export{background:#cf2944;border-color:#f35b70;color:#fff;box-shadow:0 5px 18px #0005}.lineup-controls .lineup-export:hover{background:#eb3c57}
+
 .lineup-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(250px,1fr);gap:24px;align-items:start}.lineup-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}.lineup-controls label{font-size:12px;font-weight:800;color:#d7d7dd}.lineup-controls select,.lineup-controls button,.remove-slot{margin-left:10px;background:#1c1e24;border:1px solid #ffffff30;border-radius:6px;color:white;padding:11px;font-weight:700}.pitch{position:relative;aspect-ratio:3/4;background:repeating-linear-gradient(0deg,#164e3d 0%,#164e3d 12.5%,#195943 12.5%,#195943 25%);border:3px solid #c0d9c85c;border-radius:9px;overflow:hidden;max-width:640px;margin:auto}.pitch:before{content:'';position:absolute;inset:5%;border:2px solid #ffffff50;pointer-events:none}.pitch-mid{position:absolute;left:5%;right:5%;top:50%;border-top:2px solid #ffffff50}.pitch-circle{position:absolute;left:50%;top:50%;width:25%;aspect-ratio:1;border:2px solid #ffffff50;border-radius:50%;transform:translate(-50%,-50%)}.pitch-box{position:absolute;left:25%;width:50%;height:15%;border:2px solid #ffffff50}.pitch-box-top{top:5%;border-top:0}.pitch-box-bottom{bottom:5%;border-bottom:0}.pitch-slot{position:absolute;transform:translate(-50%,-50%);width:18%;min-width:52px;border:0;background:transparent;color:white;display:flex;align-items:center;flex-direction:column;gap:2px;padding:0;z-index:1;touch-action:manipulation}.pitch-shirt{display:grid;place-items:center;width:43px;height:43px;background:#cf2944;border:2px solid #ffb7c3;border-radius:13px 13px 7px 7px;box-shadow:0 3px 14px #0008;font-weight:900;font-size:15px}.pitch-slot.active .pitch-shirt{outline:3px solid #fff}.pitch-name{background:#0c1114df;border-radius:4px;padding:3px 5px;font-size:clamp(8px,1.2vw,11px);font-weight:900;max-width:100%;overflow:hidden;text-overflow:ellipsis}.pitch-pos{font-size:9px;color:#e4f0e8}.lineup-help{font-size:12px;line-height:1.7;color:#a7a7b1}.lineup-roster{background:#17181e;border:1px solid #ffffff20;border-radius:9px;padding:18px}.lineup-roster h3{display:flex;justify-content:space-between;margin:0;font:800 27px 'Barlow Condensed'}.lineup-roster h3 span{color:#e33149}.lineup-roster p{color:#9fa0ac;font-size:12px;line-height:1.6}.lineup-player-list{display:grid;gap:6px;max-height:620px;overflow:auto}.lineup-player{width:100%;background:#22232a;border:1px solid #ffffff17;border-radius:6px;padding:10px;display:flex;align-items:center;gap:12px;text-align:left;color:white}.lineup-player b{color:#ee425b;min-width:35px}.lineup-player span{font-weight:700;font-size:12px;flex:1}.lineup-player small{display:block;color:#9e9fa9;font-size:10px;margin-top:3px}.lineup-player em{font-style:normal;font-size:9px;color:#aeb0bb}.lineup-player.selected{border-color:#ff526c;background:#4c202c}.lineup-player.used{opacity:.76}.remove-slot{margin:15px 0 0;width:100%}@media(max-width:780px){.lineup-layout{grid-template-columns:1fr}.lineup-player-list{grid-template-columns:repeat(2,minmax(0,1fr));max-height:none}.pitch-name{font-size:10px}}@media(max-width:420px){.pitch-shirt{width:34px;height:34px;font-size:12px}.pitch-slot{min-width:45px}.lineup-player-list{grid-template-columns:1fr}}
 
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
@@ -41,11 +43,51 @@ function positions(shape:Formation){
  });
  return coords;
 }
+async function exportLineup(formation:Formation,slots:(number|null)[],share:boolean){
+ const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;
+ const ctx=canvas.getContext('2d');if(!ctx)throw new Error('No se pudo generar la imagen');
+ const W=1080,H=1350;
+ const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#171b24');bg.addColorStop(.52,'#090b11');bg.addColorStop(1,'#340c1a');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#e52e4a';ctx.fillRect(0,0,W,12);
+ ctx.textAlign='center';ctx.fillStyle='#f7f7fa';ctx.font='900 75px Arial';ctx.fillText('LOS INTOCABLES',540,117);
+ ctx.fillStyle='#f44861';ctx.font='bold 27px Arial';ctx.fillText('FC 27  •  ALINEACIÓN OFICIAL',540,163);
+ ctx.fillStyle='#b7b9c4';ctx.font='bold 24px Arial';ctx.fillText('FORMACIÓN  '+formation,540,218);
+ const px=75,py=250,pw=930,ph=995;
+ const grass=ctx.createLinearGradient(px,py,px+pw,py+ph);grass.addColorStop(0,'#123c37');grass.addColorStop(1,'#0a2627');ctx.fillStyle=grass;ctx.fillRect(px,py,pw,ph);
+ for(let i=0;i<10;i++){ctx.fillStyle=i%2===0?'#ffffff08':'#0000000b';ctx.fillRect(px,py+i*ph/10,pw,ph/10)}
+ ctx.strokeStyle='#e1f4e268';ctx.lineWidth=3;ctx.strokeRect(px+30,py+30,pw-60,ph-60);
+ ctx.beginPath();ctx.moveTo(px+30,py+ph/2);ctx.lineTo(px+pw-30,py+ph/2);ctx.stroke();
+ ctx.beginPath();ctx.arc(540,py+ph/2,125,0,Math.PI*2);ctx.stroke();
+ ctx.strokeRect(px+pw*.24,py+30,pw*.52,140);ctx.strokeRect(px+pw*.24,py+ph-170,pw*.52,140);
+ const coords=positions(formation);
+ coords.forEach((p,i)=>{
+  const idx=slots[i];const player=idx===null?null:players[idx];
+  const x=px+p.x/100*pw,y=py+p.y/100*ph;
+  ctx.fillStyle='#00000077';ctx.beginPath();ctx.ellipse(x,y+48,67,17,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#eb344f';ctx.strokeStyle='#ffd2da';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(x-37,y-41);ctx.lineTo(x-57,y-20);ctx.lineTo(x-44,y+1);ctx.lineTo(x-34,y-7);ctx.lineTo(x-34,y+40);ctx.lineTo(x+34,y+40);ctx.lineTo(x+34,y-7);ctx.lineTo(x+44,y+1);ctx.lineTo(x+57,y-20);ctx.lineTo(x+37,y-41);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='900 31px Arial';ctx.fillText(player?player[2]:'—',x,y+13);
+  ctx.fillStyle='#0a0c12df';ctx.fillRect(x-72,y+45,144,34);
+  ctx.fillStyle='#fff';ctx.font='bold 18px Arial';ctx.fillText(player?player[0]:'SIN ASIGNAR',x,y+68);
+  ctx.fillStyle='#d4e5de';ctx.font='bold 15px Arial';ctx.fillText(p.label,x,y+100);
+ });
+ ctx.fillStyle='#0c0d13';ctx.fillRect(0,1250,W,100);
+ ctx.fillStyle='#e83752';ctx.fillRect(75,1280,9,35);
+ ctx.textAlign='left';ctx.fillStyle='#f3f3f7';ctx.font='bold 25px Arial';ctx.fillText('LOS INTOCABLES  •  FC 27',105,1307);
+ ctx.textAlign='right';ctx.fillStyle='#aeb1bf';ctx.font='20px Arial';ctx.fillText('ONCE TITULAR',1000,1307);
+ const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Error al exportar')),'image/png'));
+ const file=new File([blob],'los-intocables-alineacion.png',{type:'image/png'});
+ if(share&&navigator.share&&navigator.canShare?.({files:[file]})){
+  try{await navigator.share({files:[file],title:'Alineación Los Intocables FC 27'});return}catch(err){if((err as Error).name==='AbortError')return}
+ }
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
 function Lineup(){
  const [formation,setFormation]=useState<Formation>(()=>{try{const v=localStorage.getItem('li-formation');return v&&v in formations?v as Formation:'4-3-3'}catch{return '4-3-3'}});
  const [slots,setSlots]=useState<(number|null)[]>(()=>{try{const v=JSON.parse(localStorage.getItem('li-lineup')||'[]');return Array.isArray(v)?Array.from({length:11},(_,i)=>typeof v[i]==='number'&&v[i]>=0&&v[i]<players.length?v[i]:null):Array(11).fill(null)}catch{return Array(11).fill(null)}});
  const [selected,setSelected]=useState<number|null>(null);
  const [active,setActive]=useState<number|null>(null);
+ const [exportError,setExportError]=useState('');
  useEffect(()=>{try{localStorage.setItem('li-formation',formation);localStorage.setItem('li-lineup',JSON.stringify(slots))}catch{}},[formation,slots]);
  const assign=(slot:number,player:number|null)=>{
   setSlots(old=>{const next=[...old];if(player!==null){const previous=next.indexOf(player);if(previous!==-1&&previous!==slot)next[previous]=next[slot];}next[slot]=player;return next});
@@ -54,7 +96,7 @@ function Lineup(){
  const pick=(index:number)=>{if(active!==null){assign(active,index);return}setSelected(index)};
  const drop=(slot:number,e:React.DragEvent)=>{e.preventDefault();const raw=e.dataTransfer.getData('text/plain');if(raw.startsWith('player:')){const n=Number(raw.slice(7));if(Number.isInteger(n)&&n>=0&&n<players.length)assign(slot,n)}else if(raw.startsWith('slot:')){const from=Number(raw.slice(5));if(from>=0&&from<11){setSlots(old=>{const next=[...old];[next[from],next[slot]]=[next[slot],next[from]];return next})}}};
  const coords=positions(formation);
- return <div className="lineup-layout"><div><div className="lineup-controls"><label>FORMACIÓN <select value={formation} onChange={e=>setFormation(e.target.value as Formation)}>{Object.keys(formations).map(f=><option key={f} value={f}>{f}</option>)}</select></label><button onClick={()=>{setSlots(Array(11).fill(null));setActive(null);setSelected(null)}}>Vaciar once</button></div><div className="pitch" aria-label="Campo de fútbol para organizar la alineación"><div className="pitch-mid"/><div className="pitch-circle"/><div className="pitch-box pitch-box-top"/><div className="pitch-box pitch-box-bottom"/>{coords.map((p,i)=>{const n=slots[i];const player=n===null?null:players[n];return <button key={i} className={'pitch-slot'+(active===i?' active':'')} style={{left:p.x+'%',top:p.y+'%'}} draggable={n!==null} onDragStart={e=>e.dataTransfer.setData('text/plain','slot:'+i)} onDragOver={e=>e.preventDefault()} onDrop={e=>drop(i,e)} onClick={()=>{if(selected!==null)assign(i,selected);else setActive(active===i?null:i)}} title="Pulsa para elegir un jugador o arrastra uno aquí"><span className="pitch-shirt">{player?'#'+player[2]:'+'}</span><span className="pitch-name">{player?player[0]:'Elegir'}</span><span className="pitch-pos">{p.label}</span></button>})}</div><p className="lineup-help">Pulsa una posición y después un jugador, o arrastra jugadores al campo. Puedes intercambiar jugadores entre posiciones. El once se guarda en este navegador.</p></div><aside className="lineup-roster"><h3>PLANTILLA <span>{slots.filter(x=>x!==null).length}/11</span></h3><p>Selecciona un jugador y toca su posición en el campo.</p><div className="lineup-player-list">{players.map(([name,pos,num],i)=><button key={i} draggable onDragStart={e=>e.dataTransfer.setData('text/plain','player:'+i)} className={'lineup-player'+(selected===i?' selected':'')+(slots.includes(i)?' used':'')} onClick={()=>pick(i)}><b>#{num}</b><span>{name}<small>{pos}</small></span><em>{slots.includes(i)?'EN EL 11':'+'}</em></button>)}</div>{active!==null&&<button className="remove-slot" onClick={()=>assign(active,null)}>Quitar jugador de la posición</button>}</aside></div>;
+ return <div className="lineup-layout"><div><div className="lineup-controls"><label>FORMACIÓN <select value={formation} onChange={e=>setFormation(e.target.value as Formation)}>{Object.keys(formations).map(f=><option key={f} value={f}>{f}</option>)}</select></label><button onClick={()=>{setSlots(Array(11).fill(null));setActive(null);setSelected(null)}}>Vaciar once</button><button className="lineup-export" onClick={()=>{setExportError('');exportLineup(formation,slots,false).catch(()=>setExportError('No se pudo generar la imagen.'))}}>📸 Descargar imagen</button><button className="lineup-export" onClick={()=>{setExportError('');exportLineup(formation,slots,true).catch(()=>setExportError('No se pudo compartir la imagen.'))}}>Compartir once</button></div><div className="pitch" aria-label="Campo de fútbol para organizar la alineación"><div className="pitch-mid"/><div className="pitch-circle"/><div className="pitch-box pitch-box-top"/><div className="pitch-box pitch-box-bottom"/>{coords.map((p,i)=>{const n=slots[i];const player=n===null?null:players[n];return <button key={i} className={'pitch-slot'+(active===i?' active':'')} style={{left:p.x+'%',top:p.y+'%'}} draggable={n!==null} onDragStart={e=>e.dataTransfer.setData('text/plain','slot:'+i)} onDragOver={e=>e.preventDefault()} onDrop={e=>drop(i,e)} onClick={()=>{if(selected!==null)assign(i,selected);else setActive(active===i?null:i)}} title="Pulsa para elegir un jugador o arrastra uno aquí"><span className="pitch-shirt">{player?'#'+player[2]:'+'}</span><span className="pitch-name">{player?player[0]:'Elegir'}</span><span className="pitch-pos">{p.label}</span></button>})}</div>{exportError&&<p role="alert" className="lineup-help">{exportError}</p>}<p className="lineup-help">Pulsa una posición y después un jugador, o arrastra jugadores al campo. Puedes intercambiar jugadores entre posiciones. El once se guarda en este navegador.</p></div><aside className="lineup-roster"><h3>PLANTILLA <span>{slots.filter(x=>x!==null).length}/11</span></h3><p>Selecciona un jugador y toca su posición en el campo.</p><div className="lineup-player-list">{players.map(([name,pos,num],i)=><button key={i} draggable onDragStart={e=>e.dataTransfer.setData('text/plain','player:'+i)} className={'lineup-player'+(selected===i?' selected':'')+(slots.includes(i)?' used':'')} onClick={()=>pick(i)}><b>#{num}</b><span>{name}<small>{pos}</small></span><em>{slots.includes(i)?'EN EL 11':'+'}</em></button>)}</div>{active!==null&&<button className="remove-slot" onClick={()=>assign(active,null)}>Quitar jugador de la posición</button>}</aside></div>;
 }
 function XNews(){
  const [open,setOpen]=useState(false);
