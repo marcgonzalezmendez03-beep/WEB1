@@ -8,7 +8,7 @@ from pathlib import Path
 import secrets
 import json
 from fastapi import FastAPI, Header, HTTPException
-from .sync import sync_one, SOURCES
+from sync import sync_one, SOURCES
 import asyncio
 import os
 from contextlib import asynccontextmanager
@@ -30,8 +30,8 @@ async def lifespan(app):
         await asyncio.gather(task, return_exceptions=True)
 
 app = FastAPI(title="Los Intocables FC 27", lifespan=lifespan)
-ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / 'server' / 'data'
+ROOT = Path(__file__).resolve().parent
+DATA = ROOT / 'data'
 COMPETITIONS = [
     ('afj', 'AFJ · 4ª División', '259'),
     ('vpg', 'VPG · 5ª División', '294'),
