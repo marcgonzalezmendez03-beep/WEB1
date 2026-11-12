@@ -244,6 +244,7 @@ async def sync_vpg(key):
                 previous=json.loads(path.read_text(encoding='utf-8'))
             except (OSError,ValueError):
                 pass
+        # Preserve manually verified snapshots when VPG does not expose standings.
         if not standings:
             standings=previous.get('standings',[])
         if not matches:
