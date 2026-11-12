@@ -30,13 +30,15 @@ function XNews(){
   const target=host.current;
   target.innerHTML='';
   const link=document.createElement('a');
-  link.className='twitter-timeline';
-  link.href='https://twitter.com/LosIntocablesFc';
-  link.textContent='Publicaciones de @LosIntocablesFc';
+  link.className='tweet-link';
+  link.href='https://x.com/LosIntocablesFC/status/2119166154002530365';
+  link.textContent='Ver publicación de @LosIntocablesFC';
   link.setAttribute('data-theme','dark');
-  link.setAttribute('data-height','460');
-  link.setAttribute('data-chrome','noheader nofooter');
-  target.appendChild(link);
+  const quote=document.createElement('blockquote');
+  quote.className='twitter-tweet';
+  quote.setAttribute('data-theme','dark');
+  quote.appendChild(link);
+  target.appendChild(quote);
   const w=window as Window & {twttr?:{widgets?:{load:(element?:HTMLElement)=>void}}};
   if(w.twttr?.widgets){w.twttr.widgets.load(target);return}
   const existing=document.querySelector<HTMLScriptElement>('script[data-x-widget="true"]');
@@ -51,8 +53,8 @@ function XNews(){
  return <aside className="x-news">
   {open&&<div className="x-panel" role="dialog" aria-label="Noticias de Los Intocables en X">
    <div className="x-panel-head"><div><strong>ÚLTIMAS NOTICIAS</strong><small>@LosIntocablesFc · X</small></div><button type="button" aria-label="Cerrar noticias" onClick={()=>setOpen(false)}>×</button></div>
-   <div className="x-feed" ref={host}><a href="https://twitter.com/LosIntocablesFc" target="_blank" rel="noreferrer">Ver publicaciones en X</a></div>
-   <div className="x-panel-foot"><a href="https://twitter.com/LosIntocablesFc" target="_blank" rel="noreferrer">Abrir perfil en X ↗</a></div>
+   <div className="x-feed" ref={host}><a href="https://x.com/LosIntocablesFC/status/2119166154002530365" target="_blank" rel="noreferrer">Ver el tuit en X</a></div>
+   <div className="x-panel-foot"><a href="https://x.com/LosIntocablesFC/status/2119166154002530365" target="_blank" rel="noreferrer">Ver publicación en X ↗</a></div>
   </div>}
   <button type="button" className="x-launch" aria-expanded={open} onClick={()=>setOpen(v=>!v)}><span className="x-symbol">𝕏</span><span>{open?'Cerrar noticias':'Noticias del club'}</span></button>
  </aside>;
