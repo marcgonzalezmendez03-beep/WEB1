@@ -8,7 +8,7 @@ from pathlib import Path
 import secrets
 import json
 from fastapi import FastAPI, Header, HTTPException
-from sync import sync_one, SOURCES
+from sync import sync_one, SOURCES, SYNC_STATUS
 import asyncio
 import os
 from contextlib import asynccontextmanager
@@ -65,6 +65,10 @@ async def sync_now(authorization: str | None = Header(default=None)):
     if not token or not authorization or not secrets.compare_digest(authorization, 'Bearer ' + token):
         raise HTTPException(status_code=403, detail='Sin autorización')
     return {'results': dict(zip(SOURCES, await asyncio.gather(*(sync_one(k) for k in SOURCES))))}
+
+@app.get('/api/sync/status')
+def sync_status():
+    return {'sources': SYNC_STATUS}
 
 @app.get('/api/health')
 def health():
