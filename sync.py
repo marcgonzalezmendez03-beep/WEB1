@@ -65,7 +65,7 @@ async def sync_one(key):
     if key in VPG_URLS:
         return await sync_vpg(key)
     if key not in SOURCES: raise ValueError('Unknown competition')
-    url=f'https://www.eafcstats.es/competitions/{SOURCES[key]}'
+    url=('https://eafcstats.es/competiciones/afj-division-4a/clasificacion' if key == 'afj' else f'https://www.eafcstats.es/competitions/{SOURCES[key]}')
     try:
         async with httpx.AsyncClient(headers=HEADERS, timeout=18, follow_redirects=True) as client:
             r=await client.get(url)
