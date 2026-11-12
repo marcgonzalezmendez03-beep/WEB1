@@ -206,56 +206,81 @@ def extract_structured_matches(html):
     return found
 
 async def sync_vpg(key):
-    url = VPG_URLS[key]
-    diagnostics = {'source_url':url,'checked_at':datetime.now(timezone.utc).isoformat(),'state':'checking'}
+    """Refresh from EAFCStats first; retain last valid table on any failure."""
+    official = f'https://www.eafcstats.es/competitions/{SOURCES[key]}'
+    backup = VPG_URLS[key]
+    diagnostics = {'source_url':official,'checked_at':datetime.now(timezone.utc).isoformat(),'state':'checking'}
     SYNC_STATUS[key] = diagnostics
+    path = DATA / f'{key}.json'
+    previous = {}
+    if path.exists():
+        try:
+            previous = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, ValueError, TypeError):
+            previous = {}
+    standings = []
+    matches = []
+    selected_source = ''
     try:
         async with httpx.AsyncClient(headers=HEADERS, timeout=25, follow_redirects=True) as client:
-            responses = []
-            for endpoint in (url, url + '/matches', url + '/matches?status=completed', url + '/matches?status=scheduled'):
-                try:
-                    response = await client.get(endpoint)
-                    diagnostics[endpoint] = response.status_code
-                    if response.is_success:
-                        responses.append(response.text)
-                except httpx.HTTPError as exc:
-                    diagnostics[endpoint] = type(exc).__name__
-        standings = []
-        matches = []
-        seen = set()
-        for html in responses:
-            if not standings:
-                standings = parse_vpg_standings(html)
-            candidates = extract_structured_matches(html)
-            candidates.extend(parse_vpg_matches(html,'scheduled'))
-            for m in candidates:
-                identity = (m['home'].casefold(),m['away'].casefold(),m.get('date',''),m.get('round',''))
-                if identity not in seen:
-                    seen.add(identity)
-                    matches.append(m)
-        if not standings and not matches:
-            diagnostics.update(state='unavailable',reason='No se han detectado clasificaciones o partidos verificables en el HTML o JSON público de VPG.')
-            return {'ok':False,'reason':diagnostics['reason']}
-        DATA.mkdir(exist_ok=True)
-        path = DATA / f'{key}.json'
-        previous = {}
-        if path.exists():
             try:
-                previous=json.loads(path.read_text(encoding='utf-8'))
-            except (OSError,ValueError):
-                pass
-        # Preserve manually verified snapshots when VPG does not expose standings.
+                response = await client.get(official)
+                diagnostics['eafcstats_http_status'] = response.status_code
+                if response.is_success:
+                    e_matches, e_standings = parse_html(response.text)
+                    # Never replace a complete league table with an unrelated or partial table.
+                    if len(e_standings) >= 10 and any('intocables' in compact(row.get('team')) for row in e_standings):
+                        standings = e_standings
+                        selected_source = official
+                    if e_matches:
+                        matches = [m for m in e_matches if 'intocables' in compact(m.get('home')) or 'intocables' in compact(m.get('away'))]
+            except httpx.HTTPError as exc:
+                diagnostics['eafcstats_error'] = type(exc).__name__
+
+            # Secondary source: official VPG page, only when EAFCStats yielded no valid table.
+            if not standings:
+                for endpoint in (backup, backup + '/matches', backup + '/matches?status=completed', backup + '/matches?status=scheduled'):
+                    try:
+                        response = await client.get(endpoint)
+                        diagnostics[endpoint] = response.status_code
+                        if not response.is_success:
+                            continue
+                        if not standings:
+                            candidate = parse_vpg_standings(response.text)
+                            if len(candidate) >= 10 and any('intocables' in compact(row.get('team')) for row in candidate):
+                                standings = candidate
+                                selected_source = backup
+                        if not matches:
+                            matches = extract_structured_matches(response.text)
+                            matches.extend(parse_vpg_matches(response.text,'scheduled'))
+                    except httpx.HTTPError as exc:
+                        diagnostics[endpoint] = type(exc).__name__
+        previous_standings = previous.get('standings', [])
+        previous_matches = previous.get('matches', [])
         if not standings:
-            standings=previous.get('standings',[])
+            standings = previous_standings
         if not matches:
-            matches=previous.get('matches',[])
-        payload={'source_url':url,'verified_at':datetime.now(timezone.utc).isoformat(),
-            'matches':matches,'standings':standings}
-        tmp=DATA / f'{key}.tmp'
-        tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
-        tmp.replace(path)
-        diagnostics.update(state='ok',matches=len(matches),standings=len(standings))
-        return {'ok':True,'matches':len(matches),'standings':len(standings)}
-    except (httpx.HTTPError,OSError,ValueError) as exc:
+            matches = previous_matches
+        if not standings and not matches:
+            diagnostics.update(state='unavailable',reason='Ninguna fuente ha devuelto datos verificables.')
+            return {'ok':False,'reason':diagnostics['reason']}
+        changed = standings != previous_standings or matches != previous_matches
+        # Keep the original snapshot date unless fresh official data was actually obtained.
+        fresh = bool(selected_source or (matches and matches != previous_matches))
+        verified_at = (datetime.now(timezone.utc).isoformat() if fresh else previous.get('verified_at'))
+        if not verified_at:
+            verified_at = datetime.now(timezone.utc).isoformat()
+        payload = {'source_url':selected_source or previous.get('source_url',backup),
+                   'verified_at':verified_at,'matches':matches,'standings':standings}
+        if changed or not path.exists():
+            DATA.mkdir(exist_ok=True)
+            tmp = DATA / f'{key}.tmp'
+            tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+            tmp.replace(path)
+        diagnostics.update(state='ok' if fresh else 'cached',source_used=payload['source_url'],
+                           changed=changed,matches=len(matches),standings=len(standings),
+                           reason='' if fresh else 'Se mantiene la última clasificación guardada; no se pudo leer una nueva.')
+        return {'ok':True,'changed':changed,'fresh':fresh,'matches':len(matches),'standings':len(standings)}
+    except (OSError, ValueError, TypeError) as exc:
         diagnostics.update(state='error',reason=f'{type(exc).__name__}: {str(exc)[:160]}')
         return {'ok':False,'reason':diagnostics['reason']}
