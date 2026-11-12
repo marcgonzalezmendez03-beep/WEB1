@@ -29,20 +29,44 @@ const style=`
 `;
 type Formation = '4-3-3'|'4-4-2'|'4-2-3-1'|'3-5-2'|'5-3-2'|'4-1-2-1-2';
 const formations:Record<Formation,number[]>={'4-3-3':[3,3,4,1],'4-4-2':[2,4,4,1],'4-2-3-1':[1,3,2,4,1],'3-5-2':[2,5,3,1],'5-3-2':[2,3,5,1],'4-1-2-1-2':[2,1,2,1,4,1]};
-function positions(shape:Formation){
- const lines=formations[shape];
- const labels=shape==='4-2-3-1'?[['DC'],['MCO','MCO','MCO'],['MCD','MCD'],['LI','DFC','DFC','LD'],['POR']]:[];
- const coords:{x:number;y:number;label:string}[]=[];
- lines.forEach((count,line)=>{
-  const y=12+line*(76/(lines.length-1));
-  for(let i=0;i<count;i++){
-   const x= count===1?50:12+(76*i/(count-1));
-   const fallback=line===lines.length-1?'POR':line===0?'DEL':line===lines.length-2?'DEF':'MED';
-   coords.push({x,y,label:labels[line]?.[i]||fallback});
-  }
- });
- return coords;
-}
+type PitchPosition={x:number;y:number;label:string};
+const tacticalPositions:Record<Formation,PitchPosition[]>={
+ '4-3-3':[
+ {x:21,y:17,label:'EI'},{x:50,y:13,label:'DC'},{x:79,y:17,label:'ED'},
+ {x:28,y:40,label:'MC'},{x:50,y:48,label:'MCD'},{x:72,y:40,label:'MC'},
+ {x:13,y:70,label:'LI'},{x:38,y:75,label:'DFC'},{x:62,y:75,label:'DFC'},{x:87,y:70,label:'LD'},
+ {x:50,y:90,label:'POR'}],
+ '4-4-2':[
+ {x:38,y:16,label:'DC'},{x:62,y:16,label:'DC'},
+ {x:13,y:43,label:'MI'},{x:39,y:47,label:'MC'},{x:61,y:47,label:'MC'},{x:87,y:43,label:'MD'},
+ {x:13,y:70,label:'LI'},{x:38,y:75,label:'DFC'},{x:62,y:75,label:'DFC'},{x:87,y:70,label:'LD'},
+ {x:50,y:90,label:'POR'}],
+ '4-2-3-1':[
+ {x:50,y:12,label:'DC'},
+ {x:20,y:34,label:'MI'},{x:50,y:35,label:'MCO'},{x:80,y:34,label:'MD'},
+ {x:38,y:55,label:'MCD'},{x:62,y:55,label:'MCD'},
+ {x:13,y:74,label:'LI'},{x:38,y:76,label:'DFC'},{x:62,y:76,label:'DFC'},{x:87,y:74,label:'LD'},
+ {x:50,y:91,label:'POR'}],
+ '3-5-2':[
+ {x:38,y:14,label:'DC'},{x:62,y:14,label:'DC'},
+ {x:50,y:34,label:'MCO'},
+ {x:13,y:49,label:'CAI'},{x:37,y:52,label:'MC'},{x:63,y:52,label:'MC'},{x:87,y:49,label:'CAD'},
+ {x:26,y:75,label:'DFC'},{x:50,y:78,label:'DFC'},{x:74,y:75,label:'DFC'},
+ {x:50,y:91,label:'POR'}],
+ '5-3-2':[
+ {x:38,y:15,label:'DC'},{x:62,y:15,label:'DC'},
+ {x:28,y:44,label:'MC'},{x:50,y:48,label:'MCD'},{x:72,y:44,label:'MC'},
+ {x:11,y:69,label:'CAI'},{x:30,y:75,label:'DFC'},{x:50,y:78,label:'DFC'},{x:70,y:75,label:'DFC'},{x:89,y:69,label:'CAD'},
+ {x:50,y:91,label:'POR'}],
+ '4-1-2-1-2':[
+ {x:38,y:13,label:'DC'},{x:62,y:13,label:'DC'},
+ {x:50,y:32,label:'MCO'},
+ {x:27,y:48,label:'MC'},{x:73,y:48,label:'MC'},
+ {x:50,y:60,label:'MCD'},
+ {x:12,y:74,label:'LI'},{x:38,y:78,label:'DFC'},{x:62,y:78,label:'DFC'},{x:88,y:74,label:'LD'},
+ {x:50,y:91,label:'POR'}]
+};
+function positions(shape:Formation):PitchPosition[]{return tacticalPositions[shape]}
 async function exportLineup(formation:Formation,slots:(number|null)[],share:boolean){
  const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;
  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('No se pudo generar la imagen');
