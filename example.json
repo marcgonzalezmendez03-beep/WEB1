@@ -1,0 +1,9 @@
+{
+  "verified_at": "2026-11-12T15:00:00+00:00",
+  "matches": [
+    {"id":"unique-match-id","home":"Equipo local","away":"Equipo visitante","home_score":null,"away_score":null,"date":"2026-11-12 22:40","status":"Programado"}
+  ],
+  "standings": [
+    {"position":"1","team":"Nombre del equipo","played":"0","won":"0","drawn":"0","lost":"0","points":"0"}
+  ]
+}
