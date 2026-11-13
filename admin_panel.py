@@ -32,7 +32,7 @@ def panel(req:Request):
     if not authorized(req):
         return page('<p>Acceso privado, sin correo electrónico.</p><form method="post" action="/admin/login"><input name="username" placeholder="Usuario" required autocomplete="username"><input name="password" type="password" placeholder="Contraseña" required autocomplete="current-password"><button>Entrar</button></form>')
     with conn() as c: rows=c.execute("SELECT * FROM matches ORDER BY played_at DESC").fetchall()
-    parts=['<p><a href="/">← Volver a la web</a> · <a href="/admin/logout">Cerrar sesión</a></p><p>Clasifica los partidos obtenidos de la API. Los cambios se guardan al instante.</p>']
+    parts=['<p><a href="/">← Volver a la web</a> · <a href="/admin/logout">Cerrar sesión</a></p><p>Clasifica los partidos obtenidos de la API. Los cambios se guardan al instante.</p><form method="post" action="/admin/refresh"><button>Actualizar partidos de FC 27</button></form><p><a href="/api/matches/import/status">Estado de la importación</a></p>']
     for r in rows:
         opts='<option value="">Sin clasificar</option>'+''.join('<option value="'+k+'"'+(' selected' if r["league"]==k else '')+'>'+v+'</option>' for k,v in LEAGUES.items())
         parts.append('<article><b>'+html.escape(r["opponent"] or "Rival desconocido")+'</b> · '+html.escape(r["played_at"] or "")+'<p>'+html.escape(str(r["home_goals"] if r["home_goals"] is not None else "—"))+' - '+html.escape(str(r["away_goals"] if r["away_goals"] is not None else "—"))+'</p><form method="post" action="/admin/assign"><input type="hidden" name="match_id" value="'+html.escape(r["id"],quote=True)+'"><select name="league">'+opts+'</select><button>Guardar liga</button></form></article>')
@@ -85,3 +85,10 @@ def import_matches(matches:list[MatchIn],req:Request):
 def public_matches():
     with conn() as c: rows=c.execute("SELECT id,played_at,opponent,home_goals,away_goals,league FROM matches WHERE league IS NOT NULL ORDER BY played_at DESC").fetchall()
     return {"leagues":LEAGUES,"matches":[dict(r) for r in rows]}
+
+@router.post("/admin/refresh")
+async def admin_refresh(req:Request):
+    guard(req)
+    from fc27_importer import sync_matches
+    await sync_matches()
+    return RedirectResponse("/admin",status_code=303)
