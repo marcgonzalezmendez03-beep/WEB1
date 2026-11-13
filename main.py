@@ -9,7 +9,8 @@ import secrets
 import json
 from fastapi import FastAPI, Header, HTTPException
 from sync import sync_one, SOURCES, SYNC_STATUS
-from admin_panel import router as admin_router
+from admin_panel import router as admin_router, guard
+from fc27_importer import periodic_matches, sync_matches, STATUS as MATCH_IMPORT_STATUS
 import asyncio
 import os
 from contextlib import asynccontextmanager
@@ -24,11 +25,13 @@ async def periodic_sync():
 @asynccontextmanager
 async def lifespan(app):
     task = asyncio.create_task(periodic_sync())
+    match_task = asyncio.create_task(periodic_matches())
     try:
         yield
     finally:
         task.cancel()
-        await asyncio.gather(task, return_exceptions=True)
+        match_task.cancel()
+        await asyncio.gather(task, match_task, return_exceptions=True)
 
 app = FastAPI(title="Los Intocables FC 27", lifespan=lifespan)
 app.include_router(admin_router)
@@ -71,6 +74,15 @@ async def sync_now(authorization: str | None = Header(default=None)):
 @app.get('/api/sync/status')
 def sync_status():
     return {'sources': SYNC_STATUS}
+
+@app.get('/api/matches/import/status')
+def match_import_status():
+    return MATCH_IMPORT_STATUS
+
+@app.post('/api/matches/import/refresh')
+async def refresh_matches(request: __import__('fastapi').Request):
+    guard(request)
+    return await sync_matches()
 
 @app.get('/api/health')
 def health():
