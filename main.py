@@ -9,6 +9,7 @@ import secrets
 import json
 from fastapi import FastAPI, Header, HTTPException
 from sync import sync_one, SOURCES, SYNC_STATUS
+from admin_panel import router as admin_router
 import asyncio
 import os
 from contextlib import asynccontextmanager
@@ -30,6 +31,7 @@ async def lifespan(app):
         await asyncio.gather(task, return_exceptions=True)
 
 app = FastAPI(title="Los Intocables FC 27", lifespan=lifespan)
+app.include_router(admin_router)
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data'
 COMPETITIONS = [
