@@ -54,13 +54,17 @@ def save_rows(rows):
 MATCH_TYPES=("leagueMatch","friendlyMatch","playoffMatch")
 def fetch_fc27():
     from fc_clubs_api import FC27API
-    api=FC27API(timezone="Europe/Madrid",output="records")
+    api=FC27API(timezone="Europe/Madrid")
     club_id=int(os.getenv("FC27_CLUB_ID","5360"))
     all_matches=[]
     for match_type in MATCH_TYPES:
         try:
-            matches=normalize_rows(api.get_club_matches(club_id,match_type=match_type,count=10,output="records"))
-            player_rows=normalize_rows(api.get_match_players(club_id,match_type=match_type,count=10,both_teams=True,all_columns=True,include_events=True,output="records"))
+            matches=normalize_rows(api.get_club_matches(club_id,match_type=match_type,count=10))
+            try:
+                player_rows=normalize_rows(api.get_match_players(club_id,match_type=match_type,count=10,both_teams=True,all_columns=True,include_events=True))
+            except Exception as exc:
+                log.warning("Estadísticas de jugadores no disponibles (%s): %s",match_type,exc)
+                player_rows=[]
             by_match={}
             for player in player_rows:
                 mid=first(player,"matchId","match_id","id")
