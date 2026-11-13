@@ -7,6 +7,15 @@ from pydantic import BaseModel
 
 router = APIRouter()
 DB = os.getenv("MATCHES_DB_PATH", "/tmp/intocables_matches.sqlite3")
+_SESSION_KEY = os.getenv("ADMIN_SESSION_SECRET") or secrets.token_hex(32)
+_ADMIN_SALT = "b31d66d2f0a4c12a8e0d239c8f74a652"
+_ADMIN_HASH = "8f88641dc2be00cfed5f298d997d865871b379a099e291c7ef7045e65e8f1696"
+def valid_admin_password(password):
+    configured=os.getenv("ADMIN_PASSWORD")
+    if configured is not None:
+        return bool(configured) and hmac.compare_digest(password,configured)
+    derived=hashlib.pbkdf2_hmac("sha256",password.encode(),bytes.fromhex(_ADMIN_SALT),260000).hex()
+    return hmac.compare_digest(derived,_ADMIN_HASH)
 LEAGUES = {"vpg":"VPG 5ª División", "afj":"AFJ 4ª División", "bronze":"Bronze Zero", "friendly":"Amistosos"}
 def conn():
     Path(DB).parent.mkdir(parents=True,exist_ok=True)
@@ -16,13 +25,13 @@ def conn():
     c.execute("CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, salt TEXT NOT NULL, password_hash TEXT NOT NULL)")
     return c
 def signature(value):
-    secret=os.getenv("ADMIN_SESSION_SECRET","")
+    secret=_SESSION_KEY
     return hmac.new(secret.encode(),value.encode(),hashlib.sha256).hexdigest()
 def authorized(req):
     token=req.cookies.get("intocables_admin","")
     try:
         stamp,mac=token.split(".",1)
-        return bool(os.getenv("ADMIN_SESSION_SECRET")) and int(stamp)>time.time() and hmac.compare_digest(signature(stamp),mac)
+        return int(stamp)>time.time() and hmac.compare_digest(signature(stamp),mac)
     except (ValueError,TypeError):return False
 def guard(req):
     if not authorized(req):raise HTTPException(401,"Acceso de administrador requerido")
@@ -44,8 +53,7 @@ async def login(req:Request):
     from urllib.parse import parse_qs
     data=parse_qs((await req.body()).decode())
     user=data.get("username",[""])[0];password=data.get("password",[""])[0]
-    expected=os.getenv("ADMIN_PASSWORD","")
-    if not expected or not os.getenv("ADMIN_SESSION_SECRET") or not (hmac.compare_digest(user,"admin") and hmac.compare_digest(password,expected)):
+    if not (hmac.compare_digest(user.strip().lower(),"admin") and valid_admin_password(password)):
         return HTMLResponse("Credenciales incorrectas o administrador sin configurar. <a href='/admin'>Volver</a>",status_code=401)
     expiry=str(int(time.time()+8*3600))
     resp=RedirectResponse("/admin",status_code=303)
@@ -105,7 +113,7 @@ def session_user(req):
     try:
         value,mac=token.rsplit(".",1)
         expiry,username=value.split(":",1)
-        if int(expiry)>time.time() and os.getenv("ADMIN_SESSION_SECRET") and hmac.compare_digest(signature(value),mac):
+        if int(expiry)>time.time() and hmac.compare_digest(signature(value),mac):
             return username
     except (ValueError,TypeError):pass
     return None
@@ -123,8 +131,7 @@ async def user_login(req:Request):
     username=d.get("username",[""])[0].strip().lower()
     password=d.get("password",[""])[0]
     if username=="admin":
-        expected=os.getenv("ADMIN_PASSWORD","")
-        if not expected or not os.getenv("ADMIN_SESSION_SECRET") or not hmac.compare_digest(password,expected):
+        if not valid_admin_password(password):
             return auth_page("Usuario o contraseña incorrectos")
         expiry=str(int(time.time()+8*3600))
         resp=RedirectResponse("/admin",status_code=303)
