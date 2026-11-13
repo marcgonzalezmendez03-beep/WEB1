@@ -163,3 +163,15 @@ def user_logout():
     resp.delete_cookie("intocables_user")
     resp.delete_cookie("intocables_admin")
     return resp
+
+@router.get("/api/matches/detailed")
+def detailed_matches():
+    with conn() as c:
+        rows=c.execute("SELECT id,played_at,opponent,home_goals,away_goals,league,raw FROM matches ORDER BY played_at DESC").fetchall()
+    matches=[]
+    for r in rows:
+        item=dict(r)
+        try:item["details"]=json.loads(item.pop("raw") or "{}")
+        except (ValueError,TypeError):item["details"]={}
+        matches.append(item)
+    return {"leagues":LEAGUES,"matches":matches}
