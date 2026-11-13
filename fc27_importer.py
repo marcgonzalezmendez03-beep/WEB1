@@ -51,14 +51,29 @@ def save_rows(rows):
             played_at=excluded.played_at,opponent=excluded.opponent,
             home_goals=excluded.home_goals,away_goals=excluded.away_goals,raw=excluded.raw""",m)
     return len(normalized)
+MATCH_TYPES=("leagueMatch","friendlyMatch","playoffMatch")
 def fetch_fc27():
     from fc_clubs_api import FC27API
-    api=FC27API(timezone="Europe/Madrid")
-    club_id=os.getenv("FC27_CLUB_ID","5360")
-    # Resolve the club by name if the configured ID is not accepted by the client.
-    try:return api.get_club_matches(int(club_id),count=10)
-    except (TypeError,ValueError):
-        return api.get_club_matches(api.find_club_id(os.getenv("CLUB_NAME","Los Intocables")),count=10)
+    api=FC27API(timezone="Europe/Madrid",output="records")
+    club_id=int(os.getenv("FC27_CLUB_ID","5360"))
+    all_matches=[]
+    for match_type in MATCH_TYPES:
+        try:
+            matches=normalize_rows(api.get_club_matches(club_id,match_type=match_type,count=10,output="records"))
+            player_rows=normalize_rows(api.get_match_players(club_id,match_type=match_type,count=10,both_teams=True,all_columns=True,include_events=True,output="records"))
+            by_match={}
+            for player in player_rows:
+                mid=first(player,"matchId","match_id","id")
+                if mid is not None:by_match.setdefault(str(mid),[]).append(player)
+            for match in matches:
+                mid=first(match,"matchId","match_id","id")
+                match["match_type"]=match_type
+                match["players"]=by_match.get(str(mid),[])
+                all_matches.append(match)
+        except Exception as exc:
+            log.warning("FC27 %s no disponible: %s",match_type,exc)
+            if match_type=="leagueMatch":raise
+    return all_matches
 async def sync_matches():
     STATUS["last_checked"]=datetime.now(timezone.utc).isoformat()
     try:
