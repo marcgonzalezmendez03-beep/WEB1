@@ -62,26 +62,57 @@ def parse_html(html):
     return matches, standings
 
 async def sync_one(key):
+    """Sincroniza cada competición sin borrar una instantánea válida anterior."""
+    if key not in SOURCES:
+        raise ValueError('Unknown competition')
     if key in VPG_URLS:
         return await sync_vpg(key)
-    if key not in SOURCES: raise ValueError('Unknown competition')
-    url=('https://eafcstats.es/competiciones/afj-division-4a/clasificacion' if key == 'afj' else f'https://www.eafcstats.es/competitions/{SOURCES[key]}')
+    urls = [
+        f'https://www.eafcstats.es/competitions/{SOURCES[key]}',
+        'https://eafcstats.es/competiciones/afj-division-4a/clasificacion',
+    ]
+    status = {'state':'checking','checked_at':datetime.now(timezone.utc).isoformat(),'attempts':[]}
+    SYNC_STATUS[key] = status
+    path = DATA / f'{key}.json'
+    previous = {}
+    if path.is_file():
+        try:
+            previous = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, ValueError, TypeError):
+            pass
     try:
-        async with httpx.AsyncClient(headers=HEADERS, timeout=18, follow_redirects=True) as client:
-            r=await client.get(url)
-            r.raise_for_status()
-        matches, standings=parse_html(r.text)
-        if not matches and not standings:
-            return {'ok':False,'reason':'No se encontraron tablas compatibles y verificables; la página puede usar JavaScript o haber cambiado de estructura.','http_status':r.status_code}
-        payload={'source_url':url,'verified_at':datetime.now(timezone.utc).isoformat(),'matches':matches,'standings':standings}
-        DATA.mkdir(exist_ok=True)
-        path=DATA/f'{key}.json'
-        tmp=DATA/f'{key}.tmp'
-        tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
-        tmp.replace(path)
-        return {'ok':True,'matches':len(matches),'standings':len(standings),'verified_at':payload['verified_at']}
-    except (httpx.HTTPError, OSError) as exc:
-        return {'ok':False,'reason':f'{type(exc).__name__}: {str(exc)[:160]}'}
+        async with httpx.AsyncClient(headers=HEADERS, timeout=25, follow_redirects=True) as client:
+            for url in urls:
+                try:
+                    response = await client.get(url)
+                    attempt = {'url':url,'http_status':response.status_code}
+                    status['attempts'].append(attempt)
+                    if not response.is_success:
+                        continue
+                    matches, standings = parse_html(response.text)
+                    attempt.update(matches=len(matches),standings=len(standings))
+                    # Una tabla debe incluir al club y al menos diez equipos para ser fiable.
+                    valid = len(standings) >= 10 and any('intocables' in compact(row.get('team')) for row in standings)
+                    if not valid:
+                        continue
+                    payload = {'source_url':url,'verified_at':datetime.now(timezone.utc).isoformat(),
+                               'matches':matches or previous.get('matches',[]),'standings':standings}
+                    DATA.mkdir(exist_ok=True)
+                    tmp = DATA / f'{key}.tmp'
+                    tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+                    tmp.replace(path)
+                    status.update(state='ok',source_used=url,standings=len(standings),matches=len(payload['matches']))
+                    return {'ok':True,'standings':len(standings),'matches':len(payload['matches'])}
+                except httpx.HTTPError as exc:
+                    status['attempts'].append({'url':url,'error':type(exc).__name__})
+        if previous.get('standings'):
+            status.update(state='cached',standings=len(previous['standings']),reason='Fuente no disponible; conservando clasificación anterior.')
+            return {'ok':True,'fresh':False,'standings':len(previous['standings'])}
+        status.update(state='unavailable',reason='No se obtuvo una tabla completa verificable de AFJ.')
+        return {'ok':False,'reason':status['reason']}
+    except (OSError, ValueError, TypeError) as exc:
+        status.update(state='error',reason=f'{type(exc).__name__}: {str(exc)[:160]}')
+        return {'ok':False,'reason':status['reason']}
 
 def parse_vpg_standings(html):
     """Read VPG standings only when the official HTML exposes a real table."""
