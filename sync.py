@@ -16,7 +16,7 @@ SYNC_STATUS = {}
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data'
 SOURCES = {'afj': 259, 'vpg': 294, 'bronze': 301}
-VPG_URLS = {'vpg': 'https://virtualprogaming.com/league/quinta-division-c/matches', 'bronze': 'https://virtualprogaming.com/league/superliga-zero-spain'}
+VPG_URLS = {'vpg': 'https://virtualprogaming.com/league/quinta-division-c/matches', 'bronze': 'https://virtualprogaming.com/league/superliga-zero-spain/matches'}
 HEADERS = {'User-Agent': 'LosIntocablesFC27/1.0 (competition-data integration)', 'Accept': 'text/html,application/xhtml+xml'}
 
 def norm(s):
