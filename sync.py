@@ -16,7 +16,7 @@ SYNC_STATUS = {}
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data'
 SOURCES = {'afj': 259, 'vpg': 294, 'bronze': 301}
-VPG_URLS = {'vpg': 'https://virtualprogaming.com/league/quinta-division-c', 'bronze': 'https://virtualprogaming.com/league/superliga-zero-spain'}
+VPG_URLS = {'vpg': 'https://virtualprogaming.com/league/quinta-division-c/matches', 'bronze': 'https://virtualprogaming.com/league/superliga-zero-spain'}
 HEADERS = {'User-Agent': 'LosIntocablesFC27/1.0 (competition-data integration)', 'Accept': 'text/html,application/xhtml+xml'}
 
 def norm(s):
@@ -270,7 +270,7 @@ async def sync_vpg(key):
 
             # Secondary source: official VPG page, only when EAFCStats yielded no valid table.
             if not standings:
-                for endpoint in (backup, backup + '/matches', backup + '/matches?status=completed', backup + '/matches?status=scheduled'):
+                for endpoint in dict.fromkeys((backup, backup.removesuffix('/matches'), backup.removesuffix('/matches') + '/matches?status=completed', backup.removesuffix('/matches') + '/matches?status=scheduled')):
                     try:
                         response = await client.get(endpoint)
                         diagnostics[endpoint] = response.status_code
