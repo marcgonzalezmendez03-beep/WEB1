@@ -270,7 +270,7 @@ async def sync_vpg(key):
 
             # Secondary source: official VPG page, only when EAFCStats yielded no valid table.
             if not standings:
-                for endpoint in dict.fromkeys((backup, backup.removesuffix('/matches'), backup.removesuffix('/matches') + '/matches?status=completed', backup.removesuffix('/matches') + '/matches?status=scheduled')):
+                for endpoint in dict.fromkeys((backup.removesuffix('/matches'), backup.removesuffix('/matches') + '/table', backup.removesuffix('/matches') + '/standings', backup, backup.removesuffix('/matches') + '/matches?status=completed', backup.removesuffix('/matches') + '/matches?status=scheduled')):
                     try:
                         response = await client.get(endpoint)
                         diagnostics[endpoint] = response.status_code
