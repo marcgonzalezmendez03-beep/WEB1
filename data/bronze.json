@@ -1,25 +1,25 @@
 {
   "source_url": "https://virtualprogaming.com/league/superliga-zero-spain",
-  "verified_at": "2026-11-14T23:09:32.753010+00:00",
+  "verified_at": "2026-11-17T01:35:30.718362+00:00",
   "matches": [],
   "standings": [
     {
       "position": "1",
+      "team": "928 FC",
+      "played": "9",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "23"
+    },
+    {
+      "position": "2",
       "team": "TEAM SIGNAL",
       "played": "8",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "22"
-    },
-    {
-      "position": "2",
-      "team": "928 FC",
-      "played": "8",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "20"
     },
     {
       "position": "3",
@@ -33,7 +33,7 @@
     {
       "position": "4",
       "team": "REX TAURUS",
-      "played": "8",
+      "played": "9",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -41,7 +41,7 @@
     },
     {
       "position": "5",
-      "team": "SIBLINGS FC",
+      "team": "RED LOCK SP",
       "played": "8",
       "won": "—",
       "drawn": "—",
@@ -50,21 +50,21 @@
     },
     {
       "position": "6",
+      "team": "SIBLINGS FC",
+      "played": "8",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "14"
+    },
+    {
+      "position": "7",
       "team": "FC CHAMPANPRO",
       "played": "7",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "13"
-    },
-    {
-      "position": "7",
-      "team": "RED LOCK SP",
-      "played": "7",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "11"
     },
     {
       "position": "8",
@@ -132,7 +132,7 @@
     {
       "position": "15",
       "team": "CD REAL TOLEDO",
-      "played": "6",
+      "played": "7",
       "won": "—",
       "drawn": "—",
       "lost": "—",
