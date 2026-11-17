@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/quinta-division-c",
-  "verified_at": "2026-11-17T07:40:14.713759+00:00",
+  "verified_at": "2026-11-17T19:24:21.697370+00:00",
   "matches": [],
   "standings": [
     {
@@ -41,21 +41,21 @@
     },
     {
       "position": "5",
-      "team": "FUT Laurel",
-      "played": "16",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "30"
-    },
-    {
-      "position": "6",
       "team": "EBDJ MSFS ESPORTS",
       "played": "16",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "29"
+    },
+    {
+      "position": "6",
+      "team": "FUT Laurel",
+      "played": "16",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "28"
     },
     {
       "position": "7",
@@ -100,7 +100,7 @@
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "21"
+      "points": "22"
     },
     {
       "position": "12",
