@@ -1,25 +1,25 @@
 {
   "source_url": "https://virtualprogaming.com/league/quinta-division-c",
-  "verified_at": "2026-11-18T01:38:51.501229+00:00",
+  "verified_at": "2026-11-19T01:34:48.795693+00:00",
   "matches": [],
   "standings": [
     {
       "position": "1",
       "team": "PULCHRA CLUB",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "45"
+      "points": "51"
     },
     {
       "position": "2",
       "team": "GOLL DAMM",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "44"
+      "points": "48"
     },
     {
       "position": "3",
@@ -33,11 +33,11 @@
     {
       "position": "4",
       "team": "LOS INKAPACES",
-      "played": "18",
+      "played": "19",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "39"
+      "points": "42"
     },
     {
       "position": "5",
@@ -50,42 +50,60 @@
     },
     {
       "position": "6",
+      "team": "EBDJ MSFS ESPORTS",
+      "played": "19",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "32"
+    },
+    {
+      "position": "7",
       "team": "DUCKS STRIKERS",
-      "played": "18",
+      "played": "19",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "30"
     },
     {
-      "position": "7",
-      "team": "EBDJ MSFS ESPORTS",
-      "played": "18",
+      "position": "8",
+      "team": "FC CHAMPANPRO",
+      "played": "19",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "29"
+      "points": "28"
     },
     {
-      "position": "8",
-      "team": "FC CHAMPANPRO",
-      "played": "18",
+      "position": "9",
+      "team": "MODO DIABLO FC",
+      "played": "20",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "28"
+    },
+    {
+      "position": "10",
+      "team": "NORDIKA ESPORTS",
+      "played": "20",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "28"
+    },
+    {
+      "position": "11",
+      "team": "LOS INTOCABLES",
+      "played": "19",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "27"
     },
     {
-      "position": "9",
-      "team": "LOS INTOCABLES",
-      "played": "18",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "26"
-    },
-    {
-      "position": "10",
+      "position": "12",
       "team": "80TAZO ESPORTS",
       "played": "18",
       "won": "—",
@@ -94,27 +112,9 @@
       "points": "26"
     },
     {
-      "position": "11",
-      "team": "MODO DIABLO FC",
-      "played": "18",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "25"
-    },
-    {
-      "position": "12",
-      "team": "NORDIKA ESPORTS",
-      "played": "18",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "24"
-    },
-    {
       "position": "13",
       "team": "BARRIADA SUR",
-      "played": "18",
+      "played": "19",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -141,7 +141,7 @@
     {
       "position": "16",
       "team": "TREQUARTISTA",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -150,7 +150,7 @@
     {
       "position": "17",
       "team": "GOLDENLIONS FC",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",

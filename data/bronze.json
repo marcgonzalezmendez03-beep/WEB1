@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/superliga-zero-spain",
-  "verified_at": "2026-11-18T01:39:06.101124+00:00",
+  "verified_at": "2026-11-19T01:35:04.207640+00:00",
   "matches": [],
   "standings": [
     {
@@ -14,17 +14,17 @@
     },
     {
       "position": "2",
-      "team": "928 FC",
-      "played": "9",
+      "team": "DUCKS STRIKERS",
+      "played": "11",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "23"
+      "points": "24"
     },
     {
       "position": "3",
-      "team": "DUCKS STRIKERS",
-      "played": "10",
+      "team": "928 FC",
+      "played": "9",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -60,7 +60,7 @@
     {
       "position": "7",
       "team": "FC CHAMPANPRO",
-      "played": "9",
+      "played": "10",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -78,14 +78,23 @@
     {
       "position": "9",
       "team": "ZEUS ELEVEN",
-      "played": "7",
+      "played": "8",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "12"
+      "points": "13"
     },
     {
       "position": "10",
+      "team": "SCHALKE TEMETO",
+      "played": "11",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "13"
+    },
+    {
+      "position": "11",
       "team": "XI ESPORTS",
       "played": "10",
       "won": "—",
@@ -94,22 +103,13 @@
       "points": "11"
     },
     {
-      "position": "11",
+      "position": "12",
       "team": "NOVUS LEGACY",
       "played": "9",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "11"
-    },
-    {
-      "position": "12",
-      "team": "SCHALKE TEMETO",
-      "played": "9",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "10"
     },
     {
       "position": "13",
@@ -131,21 +131,21 @@
     },
     {
       "position": "15",
+      "team": "BRONCE FC",
+      "played": "8",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "4"
+    },
+    {
+      "position": "16",
       "team": "CD REAL TOLEDO",
       "played": "8",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "3"
-    },
-    {
-      "position": "16",
-      "team": "BRONCE FC",
-      "played": "7",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "1"
     },
     {
       "position": "17",
