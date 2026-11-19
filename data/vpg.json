@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/quinta-division-c",
-  "verified_at": "2026-11-19T01:34:48.795693+00:00",
+  "verified_at": "2026-11-19T07:41:03.362438+00:00",
   "matches": [],
   "standings": [
     {
@@ -23,57 +23,57 @@
     },
     {
       "position": "3",
+      "team": "LOS INKAPACES",
+      "played": "20",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "45"
+    },
+    {
+      "position": "4",
       "team": "LA FAMILIA",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "44"
     },
     {
-      "position": "4",
-      "team": "LOS INKAPACES",
-      "played": "19",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "42"
-    },
-    {
       "position": "5",
       "team": "FUT Laurel",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "34"
+      "points": "40"
     },
     {
       "position": "6",
+      "team": "DUCKS STRIKERS",
+      "played": "20",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "33"
+    },
+    {
+      "position": "7",
       "team": "EBDJ MSFS ESPORTS",
-      "played": "19",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "32"
     },
     {
-      "position": "7",
-      "team": "DUCKS STRIKERS",
-      "played": "19",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "30"
-    },
-    {
       "position": "8",
       "team": "FC CHAMPANPRO",
-      "played": "19",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "28"
+      "points": "31"
     },
     {
       "position": "9",
@@ -96,7 +96,7 @@
     {
       "position": "11",
       "team": "LOS INTOCABLES",
-      "played": "19",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -105,29 +105,29 @@
     {
       "position": "12",
       "team": "80TAZO ESPORTS",
-      "played": "18",
+      "played": "20",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "27"
+    },
+    {
+      "position": "13",
+      "team": "BARRIADA SUR",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "26"
     },
     {
-      "position": "13",
-      "team": "BARRIADA SUR",
-      "played": "19",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "23"
-    },
-    {
       "position": "14",
       "team": "MACAW ESPORTS",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "21"
+      "points": "25"
     },
     {
       "position": "15",
@@ -168,7 +168,7 @@
     {
       "position": "19",
       "team": "CADIZ ACADEMY",
-      "played": "17",
+      "played": "18",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -177,7 +177,7 @@
     {
       "position": "20",
       "team": "ONIBI ESPORTS [A1]",
-      "played": "17",
+      "played": "18",
       "won": "—",
       "drawn": "—",
       "lost": "—",
