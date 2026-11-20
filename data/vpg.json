@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/quinta-division-c",
-  "verified_at": "2026-11-19T07:41:03.362438+00:00",
+  "verified_at": "2026-11-20T01:29:14.810843+00:00",
   "matches": [],
   "standings": [
     {
@@ -23,21 +23,21 @@
     },
     {
       "position": "3",
+      "team": "LA FAMILIA",
+      "played": "20",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "47"
+    },
+    {
+      "position": "4",
       "team": "LOS INKAPACES",
       "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "45"
-    },
-    {
-      "position": "4",
-      "team": "LA FAMILIA",
-      "played": "20",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "44"
     },
     {
       "position": "5",
@@ -50,15 +50,6 @@
     },
     {
       "position": "6",
-      "team": "DUCKS STRIKERS",
-      "played": "20",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "33"
-    },
-    {
-      "position": "7",
       "team": "EBDJ MSFS ESPORTS",
       "played": "20",
       "won": "—",
@@ -67,13 +58,22 @@
       "points": "32"
     },
     {
-      "position": "8",
+      "position": "7",
       "team": "FC CHAMPANPRO",
       "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "31"
+    },
+    {
+      "position": "8",
+      "team": "DUCKS STRIKERS",
+      "played": "20",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "30"
     },
     {
       "position": "9",
@@ -132,11 +132,11 @@
     {
       "position": "15",
       "team": "ZENITHF FC",
-      "played": "18",
+      "played": "20",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "18"
+      "points": "21"
     },
     {
       "position": "16",
@@ -159,11 +159,11 @@
     {
       "position": "18",
       "team": "GENESIS ESPORTS",
-      "played": "18",
+      "played": "19",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "13"
+      "points": "16"
     },
     {
       "position": "19",
@@ -177,7 +177,7 @@
     {
       "position": "20",
       "team": "ONIBI ESPORTS [A1]",
-      "played": "18",
+      "played": "19",
       "won": "—",
       "drawn": "—",
       "lost": "—",

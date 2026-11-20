@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/superliga-zero-spain",
-  "verified_at": "2026-11-19T19:20:47.409690+00:00",
+  "verified_at": "2026-11-20T01:29:29.298301+00:00",
   "matches": [],
   "standings": [
     {
@@ -14,6 +14,15 @@
     },
     {
       "position": "2",
+      "team": "REX TAURUS",
+      "played": "12",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "25"
+    },
+    {
+      "position": "3",
       "team": "DUCKS STRIKERS",
       "played": "11",
       "won": "—",
@@ -22,22 +31,13 @@
       "points": "24"
     },
     {
-      "position": "3",
+      "position": "4",
       "team": "928 FC",
       "played": "10",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "23"
-    },
-    {
-      "position": "4",
-      "team": "REX TAURUS",
-      "played": "11",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "22"
     },
     {
       "position": "5",
@@ -78,7 +78,7 @@
     {
       "position": "9",
       "team": "XI ESPORTS",
-      "played": "11",
+      "played": "12",
       "won": "—",
       "drawn": "—",
       "lost": "—",
