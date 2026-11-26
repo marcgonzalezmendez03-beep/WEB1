@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/superliga-zero-spain",
-  "verified_at": "2026-11-25T13:42:41.032402+00:00",
+  "verified_at": "2026-11-26T01:41:21.907163+00:00",
   "matches": [],
   "standings": [
     {
@@ -23,6 +23,15 @@
     },
     {
       "position": "3",
+      "team": "RED LOCK SP",
+      "played": "13",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "29"
+    },
+    {
+      "position": "4",
       "team": "REX TAURUS",
       "played": "14",
       "won": "—",
@@ -31,26 +40,17 @@
       "points": "28"
     },
     {
-      "position": "4",
-      "team": "RED LOCK SP",
-      "played": "12",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "26"
-    },
-    {
       "position": "5",
-      "team": "DUCKS STRIKERS",
-      "played": "13",
+      "team": "LOS INTOCABLES",
+      "played": "15",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "24"
+      "points": "25"
     },
     {
       "position": "6",
-      "team": "LOS INTOCABLES",
+      "team": "DUCKS STRIKERS",
       "played": "14",
       "won": "—",
       "drawn": "—",
@@ -69,11 +69,11 @@
     {
       "position": "8",
       "team": "SCHALKE TEMETO",
-      "played": "14",
+      "played": "15",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "19"
+      "points": "20"
     },
     {
       "position": "9",

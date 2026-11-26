@@ -1,10 +1,19 @@
 {
   "source_url": "https://virtualprogaming.com/league/quinta-division-c",
-  "verified_at": "2026-11-25T01:41:05.677734+00:00",
+  "verified_at": "2026-11-26T01:41:07.426525+00:00",
   "matches": [],
   "standings": [
     {
       "position": "1",
+      "team": "GOLL DAMM",
+      "played": "25",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "63"
+    },
+    {
+      "position": "2",
       "team": "PULCHRA CLUB",
       "played": "24",
       "won": "—",
@@ -13,49 +22,40 @@
       "points": "61"
     },
     {
-      "position": "2",
-      "team": "GOLL DAMM",
-      "played": "24",
+      "position": "3",
+      "team": "LA FAMILIA",
+      "played": "26",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "60"
+      "points": "59"
     },
     {
-      "position": "3",
+      "position": "4",
       "team": "LOS INKAPACES",
-      "played": "24",
+      "played": "25",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "55"
     },
     {
-      "position": "4",
-      "team": "LA FAMILIA",
-      "played": "24",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "53"
-    },
-    {
       "position": "5",
       "team": "FUT Laurel",
-      "played": "24",
+      "played": "26",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "48"
+      "points": "51"
     },
     {
       "position": "6",
       "team": "FC CHAMPANPRO",
-      "played": "24",
+      "played": "26",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "41"
+      "points": "47"
     },
     {
       "position": "7",
@@ -96,7 +96,7 @@
     {
       "position": "11",
       "team": "NORDIKA ESPORTS",
-      "played": "24",
+      "played": "25",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -114,7 +114,7 @@
     {
       "position": "13",
       "team": "80TAZO ESPORTS",
-      "played": "22",
+      "played": "23",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -131,21 +131,21 @@
     },
     {
       "position": "15",
-      "team": "GOLDENLIONS FC",
+      "team": "ZENITHF FC",
       "played": "24",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "25"
+      "points": "27"
     },
     {
       "position": "16",
-      "team": "ZENITHF FC",
-      "played": "23",
+      "team": "GOLDENLIONS FC",
+      "played": "25",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "24"
+      "points": "25"
     },
     {
       "position": "17",
@@ -168,7 +168,7 @@
     {
       "position": "19",
       "team": "CADIZ ACADEMY",
-      "played": "22",
+      "played": "23",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -177,7 +177,7 @@
     {
       "position": "20",
       "team": "ONIBI ESPORTS [A1]",
-      "played": "23",
+      "played": "24",
       "won": "—",
       "drawn": "—",
       "lost": "—",
