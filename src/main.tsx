@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-type Page = 'inicio' | 'competiciones' | 'partidos' | 'plantilla' | 'clasificaciones' | 'alineacion';
+type Page = 'videos' | 'inicio' | 'competiciones' | 'partidos' | 'plantilla' | 'clasificaciones' | 'alineacion';
 type StandingsRow = {position?:string|number;team?:string;played?:string|number;won?:string|number;drawn?:string|number;lost?:string|number;gd?:string|number;points?:string|number};
 type Competition = {id:string;name:string;status:string;message?:string;standings?:StandingsRow[];matches?:unknown[];updated_at?:string|null};
 const links: {id:Page;name:string;description:string;number:string}[] = [
@@ -9,7 +9,8 @@ const links: {id:Page;name:string;description:string;number:string}[] = [
  {id:'partidos',name:'Partidos',description:'Calendario y resultados',number:'02'},
  {id:'plantilla',name:'Plantilla',description:'Conoce a nuestros jugadores',number:'03'},
  {id:'clasificaciones',name:'Clasificaciones',description:'Posiciones de las ligas',number:'04'},
- {id:'alineacion',name:'Alineación',description:'Crea tu once y cambia la formación',number:'05'}
+ {id:'alineacion',name:'Alineación',description:'Crea tu once y cambia la formación',number:'05'},
+ {id:'videos',name:'Vídeos y clips',description:'Directos oficiales de Twitch · Intocables Studio',number:'06'}
 ];
 const players=[['ADRIAN','POR','1'],['GERARD','POR','20'],['ADRIAN','DFC','14'],['ISMAEL','DFC','4'],['PARRITA','DFC','5'],['LITO','DFC','24'],['JONATHAN','CAD','23'],['JACK','CAD','99'],['PENSUKU','CAI','19'],['MANUEL','CAR','18'],['LOREN','MC','29'],['MARC','MC','21'],['ELLIOT','MCO','11'],['BRIAN','EI','10'],['ERIC','DC','12'],['SAUL','ED','33']];
 function Standings({competition}:{competition:Competition}){
@@ -17,7 +18,7 @@ function Standings({competition}:{competition:Competition}){
  if(!rows.length)return <div className="note">Clasificación pendiente de datos verificados. <a href={competition.id==='afj'?'https://www.eafcstats.es/competitions/259':competition.id==='vpg'?'https://virtualprogaming.com/league/quinta-division-c':'https://virtualprogaming.com/league/superliga-zero-spain'} target="_blank" rel="noreferrer">Ver fuente oficial ↗</a></div>;
  return <><div className="tablewrap"><table className="standings"><thead><tr><th>POS</th><th>EQUIPO</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>DG</th><th>PTS</th></tr></thead><tbody>{rows.map((r,i)=><tr key={i} className={/los\\s*intocables/i.test(r.team||'')?'club-row':''}><td>{r.position??i+1}</td><td className="team-name">{r.team||'—'}</td><td>{r.played??'—'}</td><td>{r.won??'—'}</td><td>{r.drawn??'—'}</td><td>{r.lost??'—'}</td><td>{r.gd??'—'}</td><td><strong>{r.points??'—'}</strong></td></tr>)}</tbody></table></div><p className="standings-caption">Datos de la última instantánea disponible · {competition.updated_at?.slice(0,10)||'Fecha no disponible'}</p></>;
 }
-const titles:Record<Page,string>={inicio:'Inicio',competiciones:'Competiciones',partidos:'Partidos',plantilla:'Plantilla',clasificaciones:'Clasificaciones',alineacion:'Alineación'};
+const titles:Record<Page,string>={videos:'Vídeos y clips',inicio:'Inicio',competiciones:'Competiciones',partidos:'Partidos',plantilla:'Plantilla',clasificaciones:'Clasificaciones',alineacion:'Alineación'};
 const style=`
 /* Vista compacta de partidos, diseñada para móvil */
 .match-center{width:100%;min-width:0}.match-filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 13px;margin-bottom:10px;scrollbar-width:none}.match-filters button{flex:0 0 auto;background:#1c1d24;border:1px solid #ffffff22;border-radius:6px;color:#ddd;padding:8px 11px;font-size:12px;font-weight:700}.match-filters button.chosen{background:#be243f;color:white}.match-entry{background:#17181e;border:1px solid #ffffff1c;border-radius:9px;margin:9px 0;overflow:hidden}.match-main{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px;background:transparent;color:white;border:0;text-align:left}.match-ident{min-width:0;flex:1}.match-ident h3{font:800 18px 'Barlow Condensed',sans-serif;line-height:1.12;margin:5px 0;overflow-wrap:anywhere}.match-ident h3 span{color:#e6445d}.match-ident small{font-size:11px;color:#a7a7b2}.match-league{font-size:10px;color:#ef5068;font-weight:800}.match-result{text-align:right;flex-shrink:0}.match-result strong{display:block;font:900 25px 'Barlow Condensed',sans-serif;white-space:nowrap}.match-result small{display:block;color:#aaa;font-size:10px;margin-top:5px}.match-expanded{padding:12px 14px;border-top:1px solid #ffffff1b}.match-expanded h4{font-size:15px;color:#f05269;margin:6px 0 12px}.match-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.match-stat-grid>div{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;background:#25262e;border-radius:5px;padding:9px}.match-stat-grid span{font-size:11px;color:#c4c4cd;overflow-wrap:anywhere}.match-stat-grid b{font-size:12px;text-align:right}.match-players section{padding:12px 0;border-top:1px solid #ffffff20}.match-players section>strong{display:block;margin-bottom:9px}.head{flex-wrap:wrap;gap:9px}.account-actions{margin-left:auto}.account-btn{padding:9px 12px}@media(max-width:600px){.header .head{display:flex;flex-direction:column;align-items:stretch;padding:12px 0;gap:10px}.header .logo{font-size:17px;justify-content:center;text-align:center}.header .menu{display:flex;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;width:100%;gap:3px;padding-bottom:4px;scrollbar-width:none}.header .menu button{font-size:12px;white-space:nowrap;padding:9px 10px;flex:0 0 auto}.header .account-actions{width:100%;display:flex;justify-content:center;padding:0}.header .account-btn{font-size:12px;padding:9px 14px}.section{padding-top:14px}.section .title{font-size:clamp(30px,9vw,48px);margin:8px 0 15px}.match-main{padding:11px}.match-ident h3{font-size:17px}.match-result strong{font-size:23px}.match-expanded{padding:11px}.match-stat-grid>div{padding:8px 7px}}
@@ -323,6 +324,17 @@ body{background:#07070a!important}
 @media(prefers-reduced-motion:reduce){.tile,.legend-hero-actions button{transition:none!important}}
 `;
 
+
+type TwitchVideo={id:string;title:string;url:string;thumbnail_url:string;duration:string;created_at:string};
+function VideosClips(){
+ const [videos,setVideos]=useState<TwitchVideo[]>([]);
+ const [status,setStatus]=useState('Cargando directos…');
+ const [selected,setSelected]=useState<TwitchVideo|null>(null);
+ const refresh=()=>{setStatus('Cargando directos…');fetch('/api/twitch/videos').then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.detail||'Error de Twitch');setVideos(d.videos||[]);setStatus(d.videos?.length?'':'No hay directos guardados disponibles.');}).catch(e=>setStatus(String(e.message)))};
+ useEffect(()=>{refresh()},[]);
+ return <div><div className="card" style={{marginBottom:20}}><div className="tag">INTOCABLES STUDIO · TWITCH</div><h3>Últimos directos</h3><p>Archivo oficial del club. Selecciona un directo para reproducirlo.</p><button className="account-btn" onClick={refresh}>Actualizar directos</button> <a className="back" href="https://www.twitch.tv/losintocablesfc" target="_blank" rel="noreferrer">Canal oficial ↗</a></div>{status&&<p className="note" role="status">{status}</p>}{selected&&<div className="card" style={{marginBottom:20}}><h3>{selected.title}</h3><iframe title={selected.title} src={'https://player.twitch.tv/?video='+encodeURIComponent(selected.id)+'&parent='+encodeURIComponent(window.location.hostname)+'&autoplay=false'} style={{width:'100%',aspectRatio:'16/9',border:0}} allowFullScreen/><p>El editor y la generación automática de clips aún no están disponibles.</p><a className="account-btn" href={selected.url} target="_blank" rel="noreferrer">Abrir en Twitch ↗</a></div>}<div className="cards">{videos.map(v=><article className="card" key={v.id}>{v.thumbnail_url&&<img alt="" loading="lazy" style={{width:'100%',aspectRatio:'16/9',objectFit:'cover',borderRadius:8}} src={v.thumbnail_url.replace('%{width}','640').replace('%{height}','360')}/>}<div className="tag">{v.duration} · {new Date(v.created_at).toLocaleDateString('es-ES')}</div><h3>{v.title}</h3><button className="account-btn" onClick={()=>{setSelected(v);window.scrollTo(0,0)}}>Ver directo</button></article>)}</div></div>
+}
+
 function App(){
  const [page,setPage]=useState<Page>('inicio');
  const [comps,setComps]=useState<Competition[]>([]);
@@ -336,6 +348,7 @@ function App(){
  {page==='inicio'?<main className="wrap home"><div className="eyebrow">EST. 2026 <span style={{margin:"0 12px",opacity:.4}}> / </span> CLUBES PRO · FC 27</div><h1 className="hero-title">LOS <span>INTOCABLES.</span></h1><p className="subtitle">No seguimos la historia. La escribimos. Un escudo, una familia, una obsesión: competir hasta el último minuto.</p><div className="legend-hero-actions"><button onClick={()=>go("partidos")}>EXPLORAR PARTIDOS ↗</button><button onClick={()=>go("plantilla")}>CONOCE AL EQUIPO</button></div><div className="legend-divider">EL UNIVERSO INTOCABLE</div><div className="tiles">{links.map(x=><button className="tile" key={x.id} onClick={()=>go(x.id)}><div className="tile-top"><span>↗</span></div><h2>{x.name}</h2><p>{x.description}</p></button>)}</div></main>:
  <main className="wrap section"><button className="back" onClick={()=>go('inicio')}>← Volver al inicio</button><div className="eyebrow" style={{marginTop:35}}>Los Intocables · FC 27</div><h1 className="title">{titles[page]}</h1>
  {page==='plantilla'?<div className="players">{players.map(([name,pos,num],i)=><div className="player" key={i}><span className="num">{num}</span><div><strong>{name}</strong><small>{pos}</small></div></div>)}</div>:
+ page==='videos'?<VideosClips/>:
  page==='alineacion'?<Lineup/>:
  page==='competiciones'?<div className="cards">{names.map(([id,name])=>{const c=comps.find(x=>x.id===id);return <article className="card" key={id}><div className="tag">COMPETICIÓN</div><h3>{name}</h3><p>{loading?'Cargando información…':c?.standings?.length?'Clasificación disponible: '+c.standings.length+' equipos.':'Clasificación pendiente de datos verificados.'}</p><button className="back" onClick={()=>go('clasificaciones')}>Ver clasificaciones →</button></article>})}</div>:
  page==='partidos'?<MatchCenter/>:
