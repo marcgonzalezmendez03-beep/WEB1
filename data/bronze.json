@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/superliga-zero-spain",
-  "verified_at": "2026-11-27T01:42:46.672241+00:00",
+  "verified_at": "2026-11-27T07:42:52.777973+00:00",
   "matches": [],
   "standings": [
     {
@@ -23,6 +23,15 @@
     },
     {
       "position": "3",
+      "team": "RED LOCK SP",
+      "played": "15",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "32"
+    },
+    {
+      "position": "4",
       "team": "REX TAURUS",
       "played": "15",
       "won": "—",
@@ -31,16 +40,16 @@
       "points": "31"
     },
     {
-      "position": "4",
-      "team": "RED LOCK SP",
-      "played": "13",
+      "position": "5",
+      "team": "DUCKS STRIKERS",
+      "played": "15",
       "won": "—",
       "drawn": "—",
       "lost": "—",
-      "points": "29"
+      "points": "27"
     },
     {
-      "position": "5",
+      "position": "6",
       "team": "FC CHAMPANPRO",
       "played": "14",
       "won": "—",
@@ -49,22 +58,13 @@
       "points": "26"
     },
     {
-      "position": "6",
+      "position": "7",
       "team": "LOS INTOCABLES",
       "played": "16",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "25"
-    },
-    {
-      "position": "7",
-      "team": "DUCKS STRIKERS",
-      "played": "14",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "24"
     },
     {
       "position": "8",
@@ -113,6 +113,15 @@
     },
     {
       "position": "13",
+      "team": "ATLETICO TEMPESTAD",
+      "played": "10",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "9"
+    },
+    {
+      "position": "14",
       "team": "CD REAL TOLEDO",
       "played": "11",
       "won": "—",
@@ -121,18 +130,9 @@
       "points": "7"
     },
     {
-      "position": "14",
-      "team": "ATLETICO TEMPESTAD",
-      "played": "9",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "6"
-    },
-    {
       "position": "15",
       "team": "GENESIS ESPORTS",
-      "played": "8",
+      "played": "9",
       "won": "—",
       "drawn": "—",
       "lost": "—",
@@ -159,7 +159,7 @@
     {
       "position": "18",
       "team": "AUREON ESPORTS",
-      "played": "11",
+      "played": "12",
       "won": "—",
       "drawn": "—",
       "lost": "—",
