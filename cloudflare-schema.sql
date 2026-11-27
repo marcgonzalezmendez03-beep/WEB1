@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS matches (id TEXT PRIMARY KEY, played_at TEXT, opponent TEXT, home_goals INTEGER, away_goals INTEGER, league TEXT, raw TEXT);
+CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, salt TEXT NOT NULL, password_hash TEXT NOT NULL);
