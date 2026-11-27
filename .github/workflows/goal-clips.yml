@@ -1,0 +1,36 @@
+name: Detect goal clips
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: "Authorized public HTTPS direct MP4 file URL (not a Twitch player URL)"
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install video tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg tesseract-ocr
+          pip install opencv-python-headless pytesseract
+      - name: Fetch authorized recording
+        env:
+          VIDEO_URL: ${{ inputs.video_url }}
+        run: |
+          curl --fail --location --proto '=https' --proto-redir '=https' --max-time 600 --max-filesize 2147483648 --output recording.mp4 -- "$VIDEO_URL"
+          ffprobe -v error recording.mp4
+      - name: Detect goals
+        run: python studio/detect_goals.py recording.mp4
+      - name: Save candidate clips
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-clips
+          path: goal_clips/
+          retention-days: 3
+          if-no-files-found: warn
