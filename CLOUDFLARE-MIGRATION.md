@@ -1,0 +1,3 @@
+# Migración parcial (no sustituir Render todavía)
+Worker independiente para frontend, snapshots VPG/Bronze y Twitch. Configurar TWITCH_CLIENT_ID y TWITCH_CLIENT_SECRET como secretos. El nombre web1 se ha inferido del proyecto de Cloudflare; comprobar que coincide.
+Pendiente: D1 binding y migración de datos, autenticación, importador FC27, sincronización de ligas y clips. Las rutas pendientes devuelven 503 explícito. No se han ejecutado pruebas de compilación ni despliegue.
