@@ -100,6 +100,35 @@ def competition(competition_id: str):
             return load_competition(*c)
     raise HTTPException(status_code=404, detail='Competición desconocida')
 
+
+@app.get('/api/twitch/videos')
+def twitch_videos():
+    import urllib.request
+    import urllib.parse
+    client = os.getenv('TWITCH_CLIENT_ID', '').strip()
+    secret = os.getenv('TWITCH_CLIENT_SECRET', '').strip()
+    channel = os.getenv('TWITCH_CHANNEL', 'losintocablesfc').strip()
+    if not client or not secret:
+        raise HTTPException(503, 'Configura las credenciales de Twitch en Render.')
+    try:
+        body = urllib.parse.urlencode({'client_id': client, 'client_secret': secret, 'grant_type': 'client_credentials'}).encode()
+        with urllib.request.urlopen(urllib.request.Request('https://id.twitch.tv/oauth2/token', data=body), timeout=10) as res:
+            token = json.load(res)['access_token']
+        def helix(path, params):
+            url = 'https://api.twitch.tv/helix/' + path + '?' + urllib.parse.urlencode(params)
+            req = urllib.request.Request(url, headers={'Client-Id': client, 'Authorization': 'Bearer ' + token})
+            with urllib.request.urlopen(req, timeout=10) as res:
+                return json.load(res)['data']
+        users = helix('users', {'login': channel})
+        if not users:
+            raise HTTPException(404, 'Canal de Twitch no encontrado.')
+        videos = helix('videos', {'user_id': users[0]['id'], 'type': 'archive', 'first': 12})
+        return {'channel': channel, 'videos': videos}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(502, 'No se pudo consultar Twitch. Comprueba las credenciales y vuelve a intentarlo.')
+
 DIST = ROOT / 'dist'
 if DIST.exists():
     app.mount('/assets', StaticFiles(directory=DIST / 'assets'), name='assets')
