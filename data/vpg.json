@@ -1,6 +1,6 @@
 {
   "source_url": "https://virtualprogaming.com/league/quinta-division-c",
-  "verified_at": "2026-11-27T07:42:38.190233+00:00",
+  "verified_at": "2026-11-28T07:36:44.573294+00:00",
   "matches": [],
   "standings": [
     {
@@ -68,21 +68,21 @@
     },
     {
       "position": "8",
+      "team": "MODO DIABLO FC",
+      "played": "26",
+      "won": "—",
+      "drawn": "—",
+      "lost": "—",
+      "points": "40"
+    },
+    {
+      "position": "9",
       "team": "EBDJ MSFS ESPORTS",
-      "played": "25",
+      "played": "26",
       "won": "—",
       "drawn": "—",
       "lost": "—",
       "points": "38"
-    },
-    {
-      "position": "9",
-      "team": "MODO DIABLO FC",
-      "played": "25",
-      "won": "—",
-      "drawn": "—",
-      "lost": "—",
-      "points": "37"
     },
     {
       "position": "10",
